@@ -32,6 +32,7 @@
 
 #include "lights.h"
 #include "ir_comm.h"
+#include "pc_comm.h"
 
 /**
  * The relative brightnesses for a bright and dim beacon LED,
@@ -44,7 +45,7 @@ static const uint8_t Dim = 5;
  * Stores the current state for the board.
  * See state.h for more information.
  */
-volatile board_state beacon = {.id = 0};
+volatile board_state beacon = {.id = 0, .owner = OwnerNone};
 
 /**
  * Connects the beacon board to the host PC.
@@ -58,10 +59,13 @@ inline void connect_to_pc();
  */ 
 void enforce_state();
 
+void handle_pc_comm();
+
 /**
  * Main beacon control routines.
  */ 
 int main() {
+
 
   //Ensure we're running at 16MHz.
   CPU_PRESCALE(CPU_16MHz);
@@ -72,54 +76,9 @@ int main() {
   connect_to_pc();
   sei();
 
-  //Set up the beacon's defaults.
-  beacon.owner = OwnerNone;
-  beacon.affiliation = AffiliationGreen;
-
   while(1) {
-
     enforce_state();
-
-    while(!usb_serial_available());
-
-    //Recieve a single byte from the PC, for testing.
-    int16_t byte = usb_serial_getchar();
-
-    if(byte < 0) {
-      continue;
-    }
-
-    switch(byte) {
-
-      case 'i':
-        beacon.id = 1;
-        break;
-
-      case 'r':
-        beacon.owner = OwnerRed;
-        break;
-
-      case 'g':
-        beacon.owner = OwnerGreen;
-        break;
-
-      case 'w':
-        beacon.owner = OwnerNone;
-        break;
-
-      case 'h':
-        beacon.affiliation = AffiliationGreen;
-        break;
-
-      case 't':
-        beacon.affiliation = AffiliationRed;
-        break;
-
-
-    }
-
-    send_state_to_pc(beacon);
-
+    handle_pc_comm();
   }
 
   //This code is unreachable, but avr-gcc throws a
@@ -127,6 +86,33 @@ int main() {
   return 0;
 
 }
+
+/**
+ * Handles all requests (and commands) recieved from the PC.
+ */
+void handle_pc_comm() {
+
+  board_state new_state;
+
+  //Wait until we have a request...
+  while(!usb_serial_available());
+
+  //Receive the new board state.
+  new_state = receive_state_from_pc();
+
+  //If we don't a "request" state, update the
+  //internal state. 
+  if(new_state.id != 31) {
+     beacon = new_state;
+  }
+
+  //Send the beacon's current state to the PC.
+  //(If this was a request, the PC will use this to update its display. 
+  // If this was a change, it will use this to verify that the change 
+  // went through correctly.)
+  send_state_to_pc(beacon);
+}
+
 
 /**
  * Enforces the current beacon board state, which determines the

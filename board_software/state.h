@@ -26,6 +26,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef __STATE_H__
+#define __STATE_H__
+
 #include <stdint.h>
 
 /**
@@ -106,3 +109,4 @@ union board_state_union {
 
 typedef union board_state_union board_state;
 
+#endif

@@ -25,6 +25,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef __PC_COMM_H__
+#define __PC_COMM_H__
+
 #include "state.h"
 
 
@@ -40,3 +43,11 @@ static const board_state invalid_state = { .id = -1 };
  */
 void send_state_to_pc(board_state state);
 
+/*
+ * Receives a board state from the PC. If no board state is available,
+ * returns a board state with a beacon ID of all ones.
+ */ 
+board_state receive_state_from_pc();
+
+
+#endif
