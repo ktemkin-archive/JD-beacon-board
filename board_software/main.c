@@ -28,11 +28,39 @@
 #include "usb_serial/usb_serial.h"
 #include "frequency.h"
 
+#include "state.h"
+
 #include "lights.h"
 #include "ir_comm.h"
 
+/**
+ * The relative brightnesses for a bright and dim beacon LED,
+ * in terms of percent duty cycle.
+ */ 
+static const uint8_t Bright = 100;
+static const uint8_t Dim = 5;
+
+/**
+ * Stores the current state for the board.
+ * See state.h for more information.
+ */
+volatile board_state beacon = {.id = 0};
+
+/**
+ * Connects the beacon board to the host PC.
+ * Will wait until the host PC is connected.
+ */ 
 inline void connect_to_pc();
 
+/**
+ * Enforces the current beacon board state, which determines the
+ * current state of the beacon LEDs and IR comm.
+ */ 
+void enforce_state();
+
+/**
+ * Main beacon control routines.
+ */ 
 int main() {
 
   //Ensure we're running at 16MHz.
@@ -44,9 +72,15 @@ int main() {
   connect_to_pc();
   sei();
 
-  turn_on_light(Red);
+  //Set up the beacon's defaults.
+  beacon.owner = OwnerNone;
+  beacon.affiliation = AffiliationGreen;
 
   while(1) {
+
+    enforce_state();
+
+    while(!usb_serial_available());
 
     //Recieve a single byte from the PC, for testing.
     int16_t byte = usb_serial_getchar();
@@ -56,28 +90,36 @@ int main() {
     }
 
     switch(byte) {
+
+      case 'i':
+        beacon.id = 1;
+        break;
+
       case 'r':
-        turn_off_lights();
-        turn_on_light(Red);
+        beacon.owner = OwnerRed;
         break;
+
       case 'g':
-        turn_off_lights();
-        turn_on_light(Green);
+        beacon.owner = OwnerGreen;
         break;
+
       case 'w':
-        turn_off_lights();
-        turn_on_light(White);
+        beacon.owner = OwnerNone;
         break;
-      case 'o':
-        turn_off_lights();
-        break;
+
       case 'h':
-        set_light_brightness(100);
+        beacon.affiliation = AffiliationGreen;
         break;
-      case 'l':
-        set_light_brightness(5);
+
+      case 't':
+        beacon.affiliation = AffiliationRed;
         break;
+
+
     }
+
+    send_state_to_pc(beacon);
+
   }
 
   //This code is unreachable, but avr-gcc throws a
@@ -86,6 +128,52 @@ int main() {
 
 }
 
+/**
+ * Enforces the current beacon board state, which determines the
+ * current state of the beacon LEDs and IR comm.
+ */ 
+void enforce_state() {
+
+
+  turn_off_lights();
+
+  // If the beacon has an invalid ID, turn off all peripherals
+  // and wait to be assigned an ID.
+  if(beacon.id == 0 || beacon.id == -1) {
+    return;
+  }
+
+  // Set the color of the beacon's light according to which team
+  // owns the beacon; or use white if no one owns the beacon.
+  switch(beacon.owner) {
+ 
+    case OwnerGreen:
+      turn_on_light(Green);
+      break;
+
+    case OwnerRed:
+      turn_on_light(Red);
+      break;
+
+    default:
+      turn_on_light(White);
+      break;
+
+  }
+
+  // If the beacon is owned by the robot that's playing on this beacon's
+  // side of the board, dim the light so it's a less attractive target.
+  // Otherwise, turn on the light at full brightness.
+  if((uint8_t)beacon.owner == (uint8_t)beacon.affiliation) {
+    set_light_brightness(Dim);
+  } else {
+    set_light_brightness(Bright);
+  }
+
+  //TODO: Handle IR communication accordingly?
+
+
+}
 
 
 /**
