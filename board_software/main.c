@@ -54,12 +54,19 @@ volatile board_state beacon = {.id = 0, .owner = OwnerNone};
 inline void connect_to_pc();
 
 /**
+ * Applies the provided "beacon state" object to the
+ * board, replacing the current state, and updating all peripherals.
+ */ 
+void apply_state(board_state new_state);
+
+/**
  * Enforces the current beacon board state, which determines the
  * current state of the beacon LEDs and IR comm.
  */ 
 void enforce_state();
 
 void handle_pc_comm();
+
 
 /**
  * Main beacon control routines.
@@ -77,7 +84,6 @@ int main() {
   sei();
 
   while(1) {
-    enforce_state();
     handle_pc_comm();
   }
 
@@ -103,7 +109,7 @@ void handle_pc_comm() {
   //If we don't a "request" state, update the
   //internal state. 
   if(new_state.id != 31) {
-     beacon = new_state;
+     apply_state(new_state);
   }
 
   //Send the beacon's current state to the PC.
@@ -113,13 +119,21 @@ void handle_pc_comm() {
   send_state_to_pc(beacon);
 }
 
+/**
+ * Applies the provided "beacon state" object to the
+ * board, replacing the current state, and updating all peripherals.
+ */ 
+void apply_state(board_state new_state) {
+  beacon = new_state;
+  enforce_state();
+}
+
 
 /**
  * Enforces the current beacon board state, which determines the
  * current state of the beacon LEDs and IR comm.
  */ 
 void enforce_state() {
-
 
   turn_off_lights();
 

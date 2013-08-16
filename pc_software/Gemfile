@@ -1,0 +1,19 @@
+source 'https://rubygems.org'
+
+#Serial port library, for communicating with the beacon board.
+gem 'serialport', '~>1.1.0'
+
+#Binary Data Structure library, for parsing/generating serial communications.
+gem 'bindata', '~>1.5.1'
+
+#Pry debugger.
+group :development do
+
+  #Any version of the Pry debugger.
+  gem 'pry'
+  gem 'awesome_print'
+
+  #And rspec, for unit tests.
+  gem 'rspec', '~>2.14.1'
+
+end
