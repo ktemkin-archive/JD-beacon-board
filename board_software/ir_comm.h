@@ -37,7 +37,7 @@
  * Define the RecieveHandler type, which stores a pointer to a function which
  * should handle the recieved byte.
  */ 
-typedef void (*RecieveHandler)(uint8_t);
+typedef void (*ReceiveHandler)(uint8_t);
 
 
 /**
@@ -65,6 +65,6 @@ void ir_stop_transmitting();
  * which will be called whenever a new byte of data has been
  * received over the IR channel.
  */ 
-void register_receive_handler(RecieveHandler handler);
+void register_receive_handler(ReceiveHandler handler);
 
 #endif

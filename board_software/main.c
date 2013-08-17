@@ -67,6 +67,10 @@ int main() {
   //Set up the board's peripherals...
   set_up_hardware();
 
+  //Start listening for data from the competing robots.
+  //In this case, receipt of any signals will trigger the "handle IR receive" function.
+  register_receive_handler(handle_ir_receive);
+
   //Handle communications with the host PC forever.
   //Note that all other functions are interrupt driven;
   //so PC communication is both the lowest priority and
@@ -133,7 +137,6 @@ void handle_pc_comm() {
 
   //Receive the new board state.
   new_state = receive_state_from_pc();
-
 
   //If we don't a "request" state, update the
   //internal state. 
@@ -231,4 +234,20 @@ bool beacon_can_be_claimed() {
   return (uint8_t)beacon.owner != (uint8_t)beacon.affiliation;
 }
 
+/**
+ * Function which handles the receipt of an IR value from
+ * the competing robot. This function is called from within
+ * an interrupt, and thus is assumed to be uninterruptable.
+ */ 
+void handle_ir_receive(uint8_t value) {
 
+  //DEBUG CODE
+  if(value == claim_code) {
+    beacon.owner = OwnerGreen;
+  } else {
+    beacon.owner = OwnerRed; 
+  }
+
+  apply_state(beacon);
+
+}

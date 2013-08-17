@@ -48,9 +48,15 @@ static const unsigned long uart_baud_rate = 150;
 
 
 /**
- * Static "pseudo-global" which stores the value used for continuous transmission.
+ * Static "pseudo-global" that stores the value used for continuous transmission.
  */ 
 static volatile uint8_t value_to_continuously_transmit;
+
+/**
+ * Static "pseudo-global" that stores the function which should be called on a
+ * succesful reciept of IR data.
+ */ 
+static volatile ReceiveHandler receive_handler = 0;
 
 
 /**
@@ -178,6 +184,21 @@ void ir_stop_transmitting() {
 }
 
 
+/**
+ * Registers a given function to act as a "recieve handler",
+ * which will be called whenever a new byte of data has been
+ * received over the IR channel.
+ */ 
+void register_receive_handler(ReceiveHandler handler) {
+  
+  //Store the receive handler...
+  receive_handler = handler;
+
+  //... and enable the UART receive interrupt.
+  UCSR1B |= (1 << RXCIE1);
+
+}
+
 /** 
  * Interrupt handler which is executed whenever the UART is ready 
  * for to transmit a new piece of data while in continuous transmission mode.
@@ -189,3 +210,20 @@ ISR(USART1_UDRE_vect) {
 
 }
 
+/**
+ * Interrupt handler which is executed whenever the UART
+ * receives a valid piece of data.
+ */ 
+ISR(USART1_RX_vect) {
+
+  //Always read in the value that was received,
+  //as this has the side effect of allowing reciept
+  //to continue.
+  uint8_t received = UDR1;
+
+  //If a receive handler was registered, call it.
+  if(receive_handler) {
+    receive_handler(received);
+  }
+
+}

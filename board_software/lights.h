@@ -35,7 +35,7 @@
 
 #define WHITE_LIGHT_PIN 0
 #define RED_LIGHT_PIN   1
-#define GREEN_LIGHT_PIN 6
+#define GREEN_LIGHT_PIN 7
 
 enum color {
   White  = WHITE_LIGHT_PIN,

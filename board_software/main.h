@@ -70,4 +70,12 @@ void set_up_hardware();
 void start_transmitting_claim_code();
 
 
+/**
+ * Function which handles the receipt of an IR value from
+ * the competing robot. This function is called from within
+ * an interrupt, and thus is assumed to be uninterruptable.
+ */ 
+void handle_ir_receive(uint8_t value);
+
+
 #endif

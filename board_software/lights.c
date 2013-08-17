@@ -35,8 +35,8 @@
 
 static const uint16_t cycles_per_pwm = 512;
 
-static uint8_t current_light_mask = 0;
-static uint8_t percent_brightness = 100;
+volatile static uint8_t current_light_mask = 0;
+volatile static uint8_t percent_brightness = 100;
 
 /**
  * Configures the AVR so it can control each of the 
