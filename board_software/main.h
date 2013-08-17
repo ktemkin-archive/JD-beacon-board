@@ -58,6 +58,13 @@ void handle_pc_comm();
 bool beacon_can_be_claimed();
 
 /**
+ * Returns true iff the given beacon is _disabled_,
+ * and thus not being used in this round.
+ */ 
+bool beacon_is_disabled();
+
+
+/**
  * Sets up the board's peripherals and communications channels.
  */
 void set_up_hardware();
@@ -75,7 +82,7 @@ void start_transmitting_claim_code();
  * the competing robot. This function is called from within
  * an interrupt, and thus is assumed to be uninterruptable.
  */ 
-void handle_ir_receive(uint8_t value);
+void handle_IR_receive(uint8_t value);
 
 
 #endif

@@ -14,7 +14,6 @@
  * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -69,7 +68,7 @@ int main() {
 
   //Start listening for data from the competing robots.
   //In this case, receipt of any signals will trigger the "handle IR receive" function.
-  register_receive_handler(handle_ir_receive);
+  register_receive_handler(handle_IR_receive);
 
   //Handle communications with the host PC forever.
   //Note that all other functions are interrupt driven;
@@ -182,7 +181,7 @@ void enforce_state() {
 
   // If the beacon has an invalid ID, turn off all peripherals
   // and wait to be assigned an ID.
-  if(beacon.id == 0 || beacon.id == 31) {
+  if(beacon_is_disabled()) {
     return;
   }
 
@@ -235,19 +234,42 @@ bool beacon_can_be_claimed() {
 }
 
 /**
+ * Returns true iff the given beacon is _disabled_,
+ * and thus not being used in this round.
+ */ 
+bool beacon_is_disabled() {
+  return beacon.id == 0 || beacon.id == 31;
+}
+
+
+/**
+ * Returns true iff the provided "response code"
+ * matches the transmitted "claim code". If this is 
+ * 
+ */ 
+bool is_valid_response_code(uint8_t code) {
+  return code == ~claim_code;
+}
+
+/**
  * Function which handles the receipt of an IR value from
  * the competing robot. This function is called from within
  * an interrupt, and thus is assumed to be uninterruptable.
  */ 
-void handle_ir_receive(uint8_t value) {
+void handle_IR_receive(uint8_t value) {
 
-  //DEBUG CODE
-  if(value == claim_code) {
-    beacon.owner = OwnerGreen;
-  } else {
-    beacon.owner = OwnerRed; 
+  //If the beacon is disabled, ignore all received IR data. 
+  if(beacon_is_disabled()) {
+    return;
   }
 
-  apply_state(beacon);
+  //If we've recieved a valid response code,
+  //change this becaon's owner to match the claiming robot.
+  if(is_valid_response_code(value)) {
+    beacon.owner = beacon.affiliation; 
+  }
+
+  //Apply the beacon's state.
+  enforce_state();
 
 }
