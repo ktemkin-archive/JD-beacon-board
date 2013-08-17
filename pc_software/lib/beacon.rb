@@ -102,6 +102,7 @@ class Beacon
   #
   def state=(new_state)
     send_state(new_state)
+    receive_state
   end
 
   

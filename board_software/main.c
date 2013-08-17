@@ -139,7 +139,7 @@ void enforce_state() {
 
   // If the beacon has an invalid ID, turn off all peripherals
   // and wait to be assigned an ID.
-  if(beacon.id == 0 || beacon.id == -1) {
+  if(beacon.id == 0 || beacon.id == 31) {
     return;
   }
 
