@@ -34,20 +34,20 @@
 /** 
  * Generic invalid state constant.
  */ 
-static const board_state invalid_state = { .id = -1 };
+static const BoardState invalid_state = { .id = -1 };
 
 /**
  * Transmits the provided board state to the PC.
  *
  * state: The current state to be transmitted.
  */
-void send_state_to_pc(board_state state);
+void send_state_to_pc(BoardState state);
 
 /*
  * Receives a board state from the PC. If no board state is available,
  * returns a board state with a beacon ID of all ones.
  */ 
-board_state receive_state_from_pc();
+BoardState receive_state_from_pc();
 
 
 #endif

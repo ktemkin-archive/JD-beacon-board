@@ -27,11 +27,17 @@
  * THE SOFTWARE.
  */
 
-#ifndef __
-#define __LIGHTS_H__
+#ifndef __IR_COMM_H__
+#define __IR_COMM_H__
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+
+/**
+ * Define the RecieveHandler type, which stores a pointer to a function which
+ * should handle the recieved byte.
+ */ 
+typedef void (*RecieveHandler)(uint8_t);
 
 
 /**
@@ -39,5 +45,26 @@
  * using an IR LED.
  */ 
 void set_up_ir_comm();
+
+/**
+ * Non-blocking function which begins a process of repeatedly transmitting
+ * a single value. This is driven by interrupts, and thus effecitvely runs
+ * "in the background".
+ */ 
+void ir_start_continuously_transmitting(uint8_t value);
+
+/**
+ * Stops any transmission operations which are currently being performed
+ * (e.g. start_continuously_transmitting). If the transmission is currently
+ * transmitting a frame, transmission will be halted after that frame's stop bit.
+ */ 
+void ir_stop_transmitting();
+
+/**
+ * Registers a given function to act as a "recieve handler",
+ * which will be called whenever a new byte of data has been
+ * received over the IR channel.
+ */ 
+void register_receive_handler(RecieveHandler handler);
 
 #endif

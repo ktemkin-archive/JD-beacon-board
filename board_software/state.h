@@ -40,7 +40,7 @@ enum board_owner_enum {
   OwnerRed   = 1,
   OwnerNone  = 2
 };
-typedef enum board_owner_enum board_owner;
+typedef enum board_owner_enum BoardOwner;
 
 
 
@@ -53,7 +53,7 @@ enum board_affiliation_enum {
   AffiliationGreen = 0,
   AffiliationRed   = 1
 };
-typedef enum board_affiliation_enum board_affiliation;
+typedef enum board_affiliation_enum BoardAffiliation;
 
 
 
@@ -90,14 +90,14 @@ union board_state_union {
     //
     // 0 = Green robot side,
     // 1 = Red robot side
-    board_affiliation affiliation : 1;
+    BoardAffiliation affiliation : 1;
 
     // Indicates which team currently owns the beacon, if any.
     //
     // 0 = Green robot owns the beacon.
     // 1 = Red robot owns the beacon.
     // 2 = Neither robot owns the beacon.
-    board_owner owner : 2;
+    BoardOwner owner : 2;
   };
 
   // An equivalent representation of the same memory,
@@ -107,6 +107,6 @@ union board_state_union {
 
 };
 
-typedef union board_state_union board_state;
+typedef union board_state_union BoardState;
 
 #endif

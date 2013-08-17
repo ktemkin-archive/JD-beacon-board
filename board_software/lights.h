@@ -33,14 +33,14 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define WHITE_LIGHT_PIN 1
-#define GREEN_LIGHT_PIN 2
-#define RED_LIGHT_PIN   3
+#define WHITE_LIGHT_PIN 0
+#define RED_LIGHT_PIN   1
+#define GREEN_LIGHT_PIN 6
 
 enum color {
   White  = WHITE_LIGHT_PIN,
-  Green  = GREEN_LIGHT_PIN,
-  Red    = RED_LIGHT_PIN 
+  Red    = RED_LIGHT_PIN,
+  Green  = GREEN_LIGHT_PIN
 }; 
 
 
@@ -69,5 +69,6 @@ void turn_off_lights();
  * Sets the percent brightness of the given light.
  */ 
 void set_light_brightness(uint8_t percent);
+
 
 #endif

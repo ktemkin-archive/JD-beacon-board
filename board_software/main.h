@@ -1,5 +1,4 @@
 /**
- * PC Communications Functions
  *
  * The MIT License (MIT)
  * 
@@ -25,29 +24,50 @@
  * THE SOFTWARE.
  */
 
-#include "usb_serial/usb_serial.h"
-#include "pc_comm.h"
-
-/**
- * Transmits the provided board state to the PC.
- *
- * state: The current state to be transmitted.
- */
-void send_state_to_pc(BoardState state) {
-  usb_serial_putchar(state.raw_data); 
-}
+#ifndef __MAIN_H__
+#define __MAIN_H__
 
 
 /**
- * Receives a board state from the PC. If no board state is available,
- * returns a board state with a beacon ID of all ones.
+ * Connects the beacon board to the host PC.
+ * Will wait until the host PC is connected.
  */ 
-BoardState receive_state_from_pc() {
+inline void connect_to_pc();
 
-  //Receive the board state from the PC, and return it.
-  BoardState state = { .raw_data = usb_serial_getchar() };
-  return state;
+/**
+ * Applies the provided "beacon state" object to the
+ * board, replacing the current state, and updating all peripherals.
+ */ 
+void apply_state(BoardState new_state);
 
-}
+/**
+ * Enforces the current beacon board state, which determines the
+ * current state of the beacon LEDs and IR comm.
+ */ 
+void enforce_state();
+
+/**
+ * Handles all requests (and commands) recieved from the PC.
+ */
+void handle_pc_comm();
+
+/**
+ * Returns true iff this beacon can be claimed;
+ * that is, if it isn't owned by the current team.
+ */
+bool beacon_can_be_claimed();
+
+/**
+ * Sets up the board's peripherals and communications channels.
+ */
+void set_up_hardware();
+
+/**
+ * Starts the repeated transmission of a "claim code", a code which is
+ * transmitted to the competing robots. If a robot is able to respond
+ * with a modification of this code, it can claim the beacon.
+ */ 
+void start_transmitting_claim_code();
 
 
+#endif

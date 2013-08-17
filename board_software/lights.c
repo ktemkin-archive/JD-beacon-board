@@ -45,7 +45,7 @@ static uint8_t percent_brightness = 100;
 void set_up_lights() {
 
   //Set the light pins to output mode.
-  LIGHT_DDR |= (1 << WHITE_LIGHT_PIN | 1 << GREEN_LIGHT_PIN | 1 << RED_LIGHT_PIN);
+  LIGHT_DDR |= ((1 << WHITE_LIGHT_PIN) | (1 << GREEN_LIGHT_PIN) | (1 << RED_LIGHT_PIN));
 
   //Set up the timer that's used to determine brightness.
   TCCR1B |= ((0 << CS12) | (0 << CS11) | (1 << CS10) | (1 << WGM12)); 
