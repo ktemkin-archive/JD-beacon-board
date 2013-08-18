@@ -33,6 +33,10 @@
 #define USB_SERIAL_PRIVATE_INCLUDE
 #include "usb_serial.h"
 
+//Disable the -Wstrict-aliasing function for this file, as this is third
+//party code; and we're not going to change it to "fix" the relevant style
+//issue.
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
 
 /**************************************************************************
  *
