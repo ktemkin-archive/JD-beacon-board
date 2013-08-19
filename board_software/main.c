@@ -49,14 +49,14 @@ static const uint8_t Dim = 5;
  * Stores the current state for the board.
  * See state.h for more information.
  */
-static volatile BoardState beacon = {.id = 0, .owner = OwnerNone};
+volatile static BoardState beacon = {.id = 0, .owner = OwnerNone};
 
 /**
  * Stores a "claim code", which is the code that needs to be transmitted to 
  * claim the beacon. This should be populated with a random number once the
  * beacon is assigned an ID.
  */
-static volatile uint8_t claim_code = 0;
+volatile static uint8_t claim_code = 0;
 
 /**
  * Main beacon control routines.
@@ -222,7 +222,9 @@ void enforce_state() {
  * with a modification of this code, it can claim the beacon.
  */ 
 void start_transmitting_claim_code() {
-  ir_start_continuously_transmitting(rand());
+
+  claim_code = rand();
+  ir_start_continuously_transmitting(claim_code);
 }
 
 /**
@@ -248,7 +250,13 @@ bool beacon_is_disabled() {
  * 
  */ 
 bool is_valid_response_code(uint8_t code) {
-  return code == ~claim_code;
+
+  //In this case, the cast is necessary, as avr-gcc
+  //will promote claim_code to an integer _before_ its bitwise
+  //not operation. We need it to be a uint8_t afterwards, so
+  //the comparison is performed correctly! 
+  return code == (uint8_t)~claim_code;
+
 }
 
 /**
@@ -266,10 +274,10 @@ void handle_IR_receive(uint8_t value) {
   //If we've recieved a valid response code,
   //change this becaon's owner to match the claiming robot.
   if(is_valid_response_code(value)) {
-    beacon.owner = beacon.affiliation; 
-  }
+    beacon.owner = beacon.affiliation;
+  } 
 
   //Apply the beacon's state.
-  enforce_state();
+  apply_state(beacon);
 
 }

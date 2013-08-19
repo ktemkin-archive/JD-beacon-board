@@ -32,6 +32,9 @@ require_relative 'beacon_state'
 class Beacon
   extend Forwardable
 
+  #DEBUG ONLY
+  attr_reader :serial_port
+
 
   # The timeout for a single read from a the beacon board, in milliseconds.
   READ_TIMEOUT = 2000
@@ -67,9 +70,9 @@ class Beacon
     end
   end
 
-  STATE_PROPETIES = [:id, :affiliation, :owner]
-  def_delegators :state, *STATE_PROPETIES
-  state_setter(*STATE_PROPETIES)
+  STATE_PROPERTIES = [:id, :affiliation, :owner]
+  def_delegators :state, *STATE_PROPERTIES
+  state_setter(*STATE_PROPERTIES)
 
 
   #

@@ -97,7 +97,7 @@ ISR(TIMER1_COMPA_vect) {
 
   static uint8_t ticks = 0;
 
-  //Count a single overflow "tick".Count a single overflow.
+  //Count a single overflow "tick".
   ticks = (ticks + 1) % 100;
 
   //If we've reached the turn-off time, disable the light.

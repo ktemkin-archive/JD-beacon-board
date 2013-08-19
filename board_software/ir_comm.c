@@ -30,6 +30,9 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+//DEBUG ONLY
+#include <util/delay.h>
+
 #include "ir_comm.h"
 
 /**
@@ -44,7 +47,7 @@ static const unsigned long carrier_frequency = 38000UL;
  * In this case, this is roughly equal to the number of bits transmitted 
  * per second, including the protocol overhead ("start" and "stop bits").
  */
-static const unsigned long uart_baud_rate = 150;
+static const unsigned long uart_baud_rate = 300;
 
 
 /**
@@ -142,16 +145,18 @@ void set_up_pwm_timer() {
  */ 
 void set_up_uart() {
 
+  UCSR1A = 0;
+
   //Enable the two core UART components: the transmitter and the reciever.
   UCSR1B = ((1 << RXEN1) | (1 << TXEN1));
 
   //Specify the frame format for the subsequent UART communcations:
   //8 bits of data; no parity; one stop bit.
-  UCSR1C = (3 << UCSZ10);
+	UCSR1C = (1<<UCSZ11) | (1<<UCSZ10);
   
   //Compute the baud rate, determining the UART counter value which will
-  //trigger a send/receive event. See page 
-  UBRR1 = ((F_CPU / 16UL) / uart_baud_rate) - 1;
+  //trigger a send/receive event. See page 189 of the AtMega32u4 datasheet.
+  UBRR1 = (F_CPU / (16UL * uart_baud_rate)) - 1;
 
 }
 
@@ -207,7 +212,6 @@ ISR(USART1_UDRE_vect) {
 
   //As soon as the interrupt has occurred, transmit the given value.
   UDR1 = value_to_continuously_transmit;
-
 }
 
 /**
@@ -220,6 +224,8 @@ ISR(USART1_RX_vect) {
   //as this has the side effect of allowing reciept
   //to continue.
   uint8_t received = UDR1;
+
+  //TODO: Check for framing errors.
 
   //If a receive handler was registered, call it.
   if(receive_handler) {
