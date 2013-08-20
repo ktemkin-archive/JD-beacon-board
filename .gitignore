@@ -21,3 +21,4 @@ board_software/main
 board_software/main.hex
 
 *.s\#*
+*.b\#*
