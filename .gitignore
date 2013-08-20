@@ -20,5 +20,16 @@
 board_software/main
 board_software/main.hex
 
+#eagle temp files
 *.s\#*
 *.b\#*
+*.job.brd
+
+#gerber files
+*.ger
+*.gpi
+*.xln
+*.dsn
+*.scr
+*.dri
+*.pro
