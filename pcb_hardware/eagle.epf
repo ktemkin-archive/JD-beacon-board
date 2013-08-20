@@ -1,7 +1,7 @@
 [Eagle]
 Version="06 05 00"
 Platform="Linux"
-Serial="6E039A1D15-LSR-WLM-1EL"
+Serial="62191E841E-LSR-WLM-1EL"
 Globals="Globals"
 Desktop="Desktop"
 
@@ -26,8 +26,8 @@ UsedLibrary="/home/ktemkin/eagle/lbr/sparkfun/SparkFun-Sensors.lbr"
 
 [Win_1]
 Type="Schematic Editor"
-Loc="1920 0 3837 1197"
-State=0
+Loc="0 0 519 751"
+State=2
 Number=1
 File="beacon_board.sch"
 View="-160.539 -103.287 158.989 102.124"
@@ -69,15 +69,16 @@ ArcDirection=0
 AddLevel=2
 PadsSameType=0
 Layer=91
+Views=" 1: -160.539 -103.287 158.989 102.124"
 Sheet=1
 
 [Win_2]
 Type="Control Panel"
-Loc="1920 0 3837 1197"
+Loc="0 0 841 751"
 State=2
 Number=0
 
 [Desktop]
-Screen="3840 1200"
+Screen="1366 768"
 Window="Win_1"
 Window="Win_2"
