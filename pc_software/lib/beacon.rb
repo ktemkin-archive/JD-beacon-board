@@ -23,6 +23,7 @@
 #
 
 require 'serialport'
+require 'forwardable'
 
 require_relative 'beacon_state'
 

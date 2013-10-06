@@ -11,14 +11,15 @@ all: main.hex
 
 #Program the board to the teensy.
 teensy: main.hex
-	echo "Press the button on your Teensy board to continue programming..."
+	@echo "Press the button on your Teensy board to continue programming..."
 	teensy-loader-cli $(LDFLAGS) -w main.hex
 
 dfu: main.hex
 	dfu-programmer atmega32u4 erase
 	dfu-programmer atmega32u4 flash main.hex
-	echo "Be sure that any PC software using the device has been closed,"
-	echo "then unplug and re-attach the relevant device."
+	@echo
+	@echo "Be sure that any PC software using the device has been closed,"
+	@echo "then unplug and re-attach the relevant device."
 
 main.hex: main
 	avr-objcopy -O ihex $^ $@
