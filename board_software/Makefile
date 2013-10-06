@@ -17,6 +17,6 @@ teensy: main.hex
 main.hex: main
 	avr-objcopy -O ihex $^ $@
 
-main: lights.o lights.h ir_comm.o ir_comm.h state.h pc_comm.h pc_comm.c usb_serial/usb_serial.o usb_serial/usb_serial.h main.o
+main: timers.o timers.h lights.o lights.h ir_comm.o ir_comm.h state.h pc_comm.h pc_comm.c usb_serial/usb_serial.o usb_serial/usb_serial.h main.o
 
 

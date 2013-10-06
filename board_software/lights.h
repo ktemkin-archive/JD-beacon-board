@@ -1,23 +1,23 @@
 /**
- * lights.c 
+ * lights.c
  * Beacon light control functions:
  * functions which specify the color and brightness of the lights.
  *
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2014 Kyle J. Temkin <ktemkin@binghamton.edu>
  * Copyright (c) 2014 Binghamton University
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,33 +31,42 @@
 #define __LIGHTS_H__
 
 #include <avr/io.h>
-#include <avr/interrupt.h>
 
-#define WHITE_LIGHT_PIN 0
-#define RED_LIGHT_PIN   1
-#define GREEN_LIGHT_PIN 7
+#include "timers.h"
 
+//Specifies the port at which each of the lights reside...
+#define LIGHT_DDR  DDRB
+#define LIGHT_PORT PORTB
+
+//... and the pins for each of the different colored lights.
+#define WHITE_LIGHT_PIN 4
+#define RED_LIGHT_PIN   5
+#define GREEN_LIGHT_PIN 6
+
+//Create an enumerative data structure that descrives each of
+//the colors present. This allows us to easily accept a color
+//as an argument.
 enum color {
   White  = WHITE_LIGHT_PIN,
   Red    = RED_LIGHT_PIN,
   Green  = GREEN_LIGHT_PIN
-}; 
+};
 
 
 /**
- * Configures the AVR so it can control each of the 
+ * Configures the AVR so it can control each of the
  * beacon's visible lights.
- */ 
+ */
 void set_up_lights();
 
 /**
  * Turns on the light of the specified color; all other lights remain as they were.
- */ 
+ */
 void turn_on_light(enum color light_color);
 
 /**
  * Turns off the light of the specified color; all other lights remain as they were.
- */ 
+ */
 void turn_off_light(enum color light_color);
 
 /**
@@ -67,8 +76,15 @@ void turn_off_lights();
 
 /**
  * Sets the percent brightness of the given light.
- */ 
+ */
 void set_light_brightness(uint8_t percent);
+
+/**
+ * Handles PWM timer events, which occur roughly 150 times
+ * per second; these events are used to enact dimming of
+ * the board's LEDS.
+ */
+void handle_pwm_timer_event();
 
 
 #endif
