@@ -58,6 +58,7 @@ volatile static BoardState beacon = {.id = 0, .owner = OwnerNone};
  */
 volatile static uint8_t claim_code = 0;
 
+
 /**
  * Main beacon control routines.
  */
@@ -69,6 +70,10 @@ int main() {
   //Start listening for data from the competing robots.
   //In this case, receipt of any signals will trigger the "handle IR receive" function.
   register_receive_handler(handle_IR_receive);
+
+  //Registers the function that will determine the value to transmit during any IR
+  //exchange.
+  register_transmit_provider(value_to_transmit);
 
   //Handle communications with the host PC forever.
   //Note that all other functions are interrupt driven;
@@ -86,7 +91,7 @@ int main() {
 
 
 /**
- * sets up the board's peripherals and communications channels.
+ * Sets up the board's peripherals and communications channels.
  */
 void set_up_hardware() {
 
@@ -259,6 +264,20 @@ bool is_valid_response_code(uint8_t code) {
 }
 
 /**
+ * Functions which determines the value that should be transmitted
+ * over IR. This is called roughly once per second by the IR module.
+ */ 
+uint8_t value_to_transmit() {
+
+  //Determine a new, psuedo-random value to transmit.
+  claim_code = rand();
+
+  //And transmit that value.
+  return claim_code;
+
+}
+
+/**
  * Function which handles the receipt of an IR value from
  * the competing robot. This function is called from within
  * an interrupt, and thus is assumed to be uninterruptable.
@@ -274,6 +293,12 @@ void handle_IR_receive(uint8_t value) {
   //change this becaon's owner to match the claiming robot.
   if(is_valid_response_code(value)) {
     beacon.owner = beacon.affiliation;
+  } 
+  //Otherwise, disable the receiver until after the next
+  //transmission is complete. This prevents contestants
+  //from "spamming" the robot.
+  else {
+    ir_disable_receive_until_transmit_complete();
   }
 
   //Apply the beacon's state.

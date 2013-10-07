@@ -85,4 +85,11 @@ void start_transmitting_claim_code();
 void handle_IR_receive(uint8_t value);
 
 
+/**
+ * Functions which determines the value that should be transmitted
+ * over IR. This is called roughly once per second by the IR module.
+ */ 
+uint8_t value_to_transmit();
+
+
 #endif

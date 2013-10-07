@@ -36,9 +36,9 @@ TimerEventHandler slow_tick_handler  = 0;
 
 /**
  * Specifies how many fast ticks should pass before a slow tick is
- * triggered. For approximately one second, use 156.
+ * triggered. For approximately one second, use 156,200.
  */
-static const uint8_t fast_ticks_per_slow_tick = 156;
+static const uint16_t fast_ticks_per_slow_tick = 15620UL;
 
 
 /**
@@ -84,13 +84,13 @@ void register_slow_tick_handler(TimerEventHandler handler) {
 
 /**
  * Handler for the TIMER1 comparison event, which
- * occurs at about 156.2Hz.
+ * occurs at about 156,200Hz.
  */
 ISR(TIMER1_COMPA_vect) {
 
   //Stores the number of fast ticks which have occurred
   //since the last slow tick.
-  static uint8_t fast_ticks = 0;
+  static uint16_t fast_ticks = 0;
 
   //Count a single timer "fast tick",
   //which are used to generate the slow tick function.

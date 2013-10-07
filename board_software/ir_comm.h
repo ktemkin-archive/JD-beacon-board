@@ -33,11 +33,19 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#include "timers.h"
+
 /**
  * Define the RecieveHandler type, which stores a pointer to a function which
  * should handle any recieved bytes.
  */ 
 typedef void (*ReceiveHandler)(uint8_t);
+
+/**
+ * Define the TransmitProvider type, which stores a pointer to a function which
+ * should return a byte to be transmitted.
+ */ 
+typedef uint8_t (*TransmitProvider)();
 
 
 /**
@@ -47,11 +55,34 @@ typedef void (*ReceiveHandler)(uint8_t);
 void set_up_ir_comm();
 
 /**
- * Non-blocking function which begins a process of repeatedly transmitting
- * a single value. This is driven by interrupts, and thus effecitvely runs
- * "in the background".
+ * Enables receipt of IR data.
  */ 
-void ir_start_continuously_transmitting(uint8_t value);
+void ir_enable_receive();
+
+/**
+ * Disables receipt of IR data.
+ *
+ * This should be called prior to transmission when the transmitter
+ * and receiver and using the same modulation, as to prevent receiving
+ * one's own data.
+ */ 
+void ir_disable_receive();
+
+/**
+ * Disables receipt of IR data until the next transmission is complete.
+ *
+ * This should be called prior to transmission when the transmitter
+ * and receiver and using the same modulation, as to prevent receiving
+ * one's own data.
+ */ 
+void ir_disable_receive_until_transmit_complete();
+
+/**
+ * Non-blocking function which begins a process of repeatedly transmitting
+ * This is driven by interrupts, and thus effecitvely runs "in the background".
+ */ 
+void ir_start_continuously_transmitting();
+
 
 /**
  * Stops any transmission operations which are currently being performed
@@ -66,5 +97,13 @@ void ir_stop_transmitting();
  * received over the IR channel.
  */ 
 void register_receive_handler(ReceiveHandler handler);
+
+/**
+ * Registers a given function to act as a "transmit provider",
+ * which will be called whenever a new byte of data is about
+ * to be transmitted. This function should return the data
+ * to be transmitted.
+ */
+void register_transmit_provider(TransmitProvider provider);
 
 #endif

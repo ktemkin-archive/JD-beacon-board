@@ -63,6 +63,20 @@ static volatile ReceiveHandler receive_handler = 0;
 
 
 /**
+ * Static "pseudo-global" that stores the function which should be called to
+ * determine which value to transmit.
+ */
+static volatile TransmitProvider transmit_provider = 0;
+
+/**
+ * Flag which indicates whether receipt over the IR line
+ * should be enabled. (Unlike RXEN, this does not "go low"
+ * if the IR line temporarily disabled for transmission.)
+ */ 
+static uint8_t ir_receive_enabled = 0;
+
+
+/**
  * Sets up Timer 3 to produce a 38kHz "carrier" square wave,
  * for use in IR communications. This is externally AND'd with
  * our UART signal to produce our final IR communication.
@@ -78,6 +92,11 @@ static void set_up_pwm_timer();
 static void set_up_uart();
 
 
+/**
+ * Sends the "continuous transmission" value; this should
+ * be called repeatedly to enact continuous transmission mode.
+ */
+static void ir_perform_continuous_transmission();
 
 
 /**
@@ -152,13 +171,60 @@ void set_up_uart() {
 
   //Specify the frame format for the subsequent UART communcations:
   //8 bits of data; no parity; one stop bit.
-	UCSR1C = (1<<UCSZ11) | (1<<UCSZ10);
+	UCSR1C = (1 << UCSZ11) | (1 << UCSZ10);
 
   //Compute the baud rate, determining the UART counter value which will
   //trigger a send/receive event. See page 189 of the AtMega32u4 datasheet.
   UBRR1 = (F_CPU / (16UL * uart_baud_rate)) - 1;
 
+  //Enable the "transmission complete" interrupt.
+  UCSR1B |= (1 << UDRE1);
+
 }
+
+
+/**
+ * Enables receipt of IR data.
+ */ 
+void ir_enable_receive() {
+
+  //Set the IR recieve flag,
+  //which indicates that we should be 
+  //recieveing.
+  ir_receive_enabled = 1;
+
+  //And enable IR receipt itself.
+  UCSR1B |= (1 << RXEN1);
+
+}
+
+
+/**
+ * Disables receipt of IR data.
+ */ 
+void ir_disable_receive() {
+
+  //Clear the IR recieve flag,
+  //which indicates that we should not  
+  //be recieveing.
+  ir_receive_enabled = 0;
+
+  //And disable receipt itself.
+  UCSR1B &= ~(1 << RXEN1);
+
+}
+
+/**
+ * Disables receipt of IR data until the next transmission is complete.
+ *
+ * This should be called prior to transmission when the transmitter
+ * and receiver and using the same modulation, as to prevent receiving
+ * one's own data.
+ */ 
+void ir_disable_receive_until_transmit_complete() {
+  UCSR1B &= ~(1 << RXEN1);
+}
+
 
 /**
  * Non-blocking function which begins a process of repeatedly transmitting
@@ -168,14 +234,34 @@ void set_up_uart() {
  * Note that the baud rate may need to be relatively low to ensure
  * that the other end can keep up with all the data we're sending!
  */
-void ir_start_continuously_transmitting(uint8_t value) {
+void ir_start_continuously_transmitting() {
 
-  //Store the value to be transmitted.
-  value_to_continuously_transmit = value;
+  //Sets up the IR "continous transmission" function such that
+  //it will be called approximately once per second.
+  register_slow_tick_handler(ir_perform_continuous_transmission);
 
-  //Enable the "transmission complete" interrupt, which
-  //we'll use to start the next transmission.
-  UCSR1B |= (1 << UDRE1);
+}
+
+
+/**
+ * Sends the "continuous transmission" value; this should
+ * be called repeatedly to enact continuous transmission mode.
+ */
+static void ir_perform_continuous_transmission() {
+
+  //If we don't have a transmission provider function,
+  //return without transmitting.
+  if(!transmit_provider) {
+    return;
+  }
+
+  //Ensure that we don't try to receive during transmit.
+  ir_disable_receive_until_transmit_complete();
+
+  //Push the desired value into the UART data register,
+  //queuing it for transmission.
+  UDR1 = transmit_provider();
+
 }
 
 
@@ -185,7 +271,10 @@ void ir_start_continuously_transmitting(uint8_t value) {
  * transmitting a frame, transmission will be halted after that frame's stop bit.
  */
 void ir_stop_transmitting() {
-  UCSR1B &= ~(1 << UDRE1);
+
+  //Disable the slow tick handler, disabling any current continuous transmission.
+  register_slow_tick_handler(0); 
+
 }
 
 
@@ -205,13 +294,27 @@ void register_receive_handler(ReceiveHandler handler) {
 }
 
 /**
+ * Registers a given function to act as a "transmit provider",
+ * which will be called whenever a new byte of data is about
+ * to be transmitted. This function should return the data
+ * to be transmitted.
+ */
+void register_transmit_provider(TransmitProvider provider) {
+  transmit_provider = provider;
+}
+
+
+/**
  * Interrupt handler which is executed whenever the UART is ready
  * for to transmit a new piece of data while in continuous transmission mode.
  */
 ISR(USART1_UDRE_vect) {
 
-  //As soon as the interrupt has occurred, transmit the given value.
-  UDR1 = value_to_continuously_transmit;
+  //If receipt should be enabled, but we've disabled reciept
+  //during transmission, re-enable receipt.
+  if(ir_receive_enabled) {
+    ir_enable_receive();
+  }
 
 }
 
