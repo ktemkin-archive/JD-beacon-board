@@ -27,6 +27,18 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+#include <avr/interrupt.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#include "usb_serial/usb_serial.h"
+#include "frequency.h"
+
+#include "state.h"
+
+#include "lights.h"
+#include "ir_comm.h"
+#include "pc_comm.h"
 
 /**
  * Connects the beacon board to the host PC.

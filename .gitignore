@@ -15,10 +15,8 @@
 *.exe
 *.out
 *.app
-
-
-board_software/main
-board_software/main.hex
+*.elf
+*.hex
 
 #eagle temp files
 *.s\#*

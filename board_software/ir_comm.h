@@ -83,6 +83,11 @@ void ir_disable_receive_until_transmit_complete();
  */ 
 void ir_start_continuously_transmitting();
 
+/**
+ * Transmits the given value over the board's IR.
+ */ 
+void ir_transmit(uint8_t value);
+
 
 /**
  * Stops any transmission operations which are currently being performed

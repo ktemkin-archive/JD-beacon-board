@@ -167,7 +167,8 @@ void set_up_uart() {
   UCSR1A = 0;
 
   //Enable the two core UART components: the transmitter and the reciever.
-  UCSR1B = ((1 << RXEN1) | (1 << TXEN1));
+  UCSR1B = (1 << TXEN1);
+  ir_enable_receive();
 
   //Specify the frame format for the subsequent UART communcations:
   //8 bits of data; no parity; one stop bit.
@@ -255,12 +256,23 @@ static void ir_perform_continuous_transmission() {
     return;
   }
 
+  //Transmit the value provided by our "transmit provider"
+  //function.
+  ir_transmit(transmit_provider());
+
+}
+
+/**
+ * Transmits the given value over the board's IR.
+ */ 
+void ir_transmit(uint8_t value) {
+
   //Ensure that we don't try to receive during transmit.
   ir_disable_receive_until_transmit_complete();
 
   //Push the desired value into the UART data register,
   //queuing it for transmission.
-  UDR1 = transmit_provider();
+  UDR1 = value;
 
 }
 
@@ -329,10 +341,11 @@ ISR(USART1_RX_vect) {
   //to continue.
   uint8_t received = UDR1;
 
-  //TODO: Check for framing errors.
+  //Determine if a framing error has occurred.
+  uint8_t framing_error = UCSR1A & FE1;
 
   //If a receive handler was registered, call it.
-  if(receive_handler) {
+  if(!framing_error && receive_handler) {
     receive_handler(received);
   }
 
