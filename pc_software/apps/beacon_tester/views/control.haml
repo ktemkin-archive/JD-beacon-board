@@ -1,0 +1,22 @@
+!!!
+%html{:lang => "en"}
+  = haml :'shared/head'
+  %body
+    = haml :'shared/navbar'
+    .container-fluid
+      .row-fluid
+        .span6
+          %h4 Manual Control
+          .well This panel hasn't beem implemented yet.
+        .span6
+          %h4 Gameplay Simulation
+          .well This panel hasn't been implemented yet. Check back soon!
+
+      .row-fluid
+        .span12
+          %h4 Event Log
+          .well An event log would appear here, were it complete.
+        
+  = haml :'shared/foot'
+  = js :control
+

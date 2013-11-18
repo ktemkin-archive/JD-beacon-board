@@ -1,0 +1,41 @@
+
+body {
+  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+
+
+#connected_board {
+  background-color: white;
+  text-align: center;
+
+  .connected {
+    color: black; 
+  }
+}
+
+.well {
+
+  .center-contents {
+    text-align: center
+  }
+
+  .right-align {
+    text-align: right
+  }
+
+}
+
+.row.spaced {
+  margin-top: 10px;
+}
+
+.input-fullwidth {
+  width: 98%;
+}
+
+#program_alerts .alert {
+  width: 87%;
+  margin-left: 5%;
+  margin-right: 5%;
+  text-align: center;
+}

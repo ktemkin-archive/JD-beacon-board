@@ -1,0 +1,26 @@
+.navbar.navbar-fixed-top
+  .navbar-inner
+    .container
+      %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+          %a.brand{:href => "#"} <b>Beacon</b>Board
+      .nav-collapse
+
+        %ul.nav
+          = navigation_link('Control')
+          = navigation_link('Console')
+
+
+        %form.navbar-form.pull-right
+          .input-append.input-prepend
+            %span.add-on
+              %i Board
+            %span.uneditable-input#connected_board 
+              Loading...
+            %button.btn{:type => 'button', :'data-loading-text' => '...'}
+              %i.icon-refresh
+
+
+

@@ -1,0 +1,11 @@
+!!!
+%html{:lang => "en"}
+  = haml :'shared/head'
+  %body
+    = haml :'shared/navbar'
+    .container
+      %h1 Look Inside Template
+      %pre
+        = Rise::Device::configured_usercode
+        
+  = haml :'shared/foot'
