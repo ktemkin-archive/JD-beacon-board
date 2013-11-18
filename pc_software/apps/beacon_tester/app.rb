@@ -4,14 +4,7 @@
 require 'bundler/setup'
 Bundler.require
 
-#require 'compass'
-#require 'sinatra'
-#require 'barista'
-#require 'json'
-#
-#require 'require_all'
-
-#require 'beacon'
+require 'json'
 
 #Ensure that all helpers are loaded.
 require_rel 'helpers'
@@ -21,6 +14,10 @@ register Barista::Integration::Sinatra
 
 #TODO: Disable Barista auto-compile on production?
 configure { Barista.verbose = false }
+
+def connected_port
+  JDBeacon::Board.autodetect_serial_port
+end
 
 #Ensure that the relevant CSS is preprocessed by scss.
 get '/css/app.css' do
@@ -35,8 +32,9 @@ get '/control' do
   haml :control
 end
 
-get '/ajax/connected_board' do
-  Beacon.autodetect_serial_port  
+get '/ajax/status' do
+  state = JDBeacon::Board.open { |board| board.state }
+  JSON::generate(state.snapshot)
 end
 
 
