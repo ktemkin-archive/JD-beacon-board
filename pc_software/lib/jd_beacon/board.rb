@@ -27,6 +27,7 @@ require 'forwardable'
 require 'require_all'
 
 require 'jd_beacon/state'
+require 'jd_beacon/errors'
 require_rel 'enumerators'
 
 module JDBeacon
@@ -87,13 +88,13 @@ module JDBeacon
     #
     def initialize(serial_port = self.class.autodetect_serial_port)
 
-      p serial_port
-
       #If we were provided with a string, convert it into a serial port object.
       if serial_port.is_a? String
         @filename = serial_port
         serial_port = SerialPort.new(serial_port, 9600)
       end
+
+      raise NotConnectedError unless serial_port
 
       #Set up the serial port.
       @serial_port = serial_port

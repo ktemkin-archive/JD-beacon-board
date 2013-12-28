@@ -1,4 +1,4 @@
-!!!
+!!! 5
 %html{:lang => "en"}
   = haml :'shared/head'
   %body
@@ -7,10 +7,61 @@
       .row-fluid
         .span6
           %h4 Manual Control
-          .well This panel hasn't beem implemented yet.
+          #manual_control.well.disabled
+            #owner.beacon.disconnected
+
+            #claim_controls
+            %span.color_label Claim for:
+            .color_controls
+              #claim_green.claim_square.green
+              #claim_none.claim_square.none.selected
+              #claim_red.claim_square.red
+
+            #affiliation_controls    
+            %span.color_label Affiliated with:
+            .color_controls
+              #affiliation_green.claim_square.green.selected
+              .claim_square.spacer
+              #affiliation_red.claim_square.red
+
         .span6
           %h4 Gameplay Simulation
-          .well This panel hasn't been implemented yet. Check back soon!
+          .well
+            %label.checkbox{:for => "simulate_capture"} 
+              %input#simulate_capture{:type => "checkbox", :name => "simulate_capture"}
+              &nbsp; Simulate an opponent who captures the beacon every 
+              %select.form-inline#simulation_interval
+                %option 3 
+                %option 5 
+                %option 7 
+                %option 10 
+                %option 15
+                %option 20 
+                %option 25 
+                %option{:selected => 'selected'} 30
+                %option 45
+                %option 60 
+                %option 90 
+                %option 120 
+              %span seconds.
+
+            %label#probabilistically_capture_label.checkbox.disabled{:for => "probabilistically_capture"} 
+              %input#probabilistically_capture{:type => "checkbox", :name => "probabilistically_capture", :disabled => 'disabled'}
+              &nbsp; Apply only a random &nbsp;
+              .input-append#capture_probability_container
+                %select.form-inline#capture_probability{ :disabled => 'disabled'}
+                  %option 5 
+                  %option 10
+                  %option 20 
+                  %option 30
+                  %option 40
+                  %option{:selected => 'selected'} 50
+                  %option 60 
+                  %option 70 
+                  %option 80 
+                  %option 90 
+                %span.add-on %
+              &nbsp; percent of these captures. 
 
       .row-fluid
         .span12

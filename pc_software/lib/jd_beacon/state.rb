@@ -17,6 +17,11 @@ module JDBeacon
       :none  => 2
     }
 
+    # Stores a list of any fields which are "color fields".
+    @color_fields = []
+    class << self; attr_reader :color_fields; end
+    
+
     #Prevent this record from re-defining its accessor methods at runtime.
     def self.define_field_accessors(*args); end
 
@@ -28,6 +33,9 @@ module JDBeacon
 
       #First, add the appropriate field.
       send("bit#{bits}", name)
+
+      #And identify this as a "color field" internally.
+      @color_fields << name
 
       #Create a getter method, which automatically replaces the raw representation
       #of a color with a more descriptive symbol...
@@ -42,6 +50,7 @@ module JDBeacon
       end
 
     end
+
 
     # Indicates which team currently owns the beacon, if any.
     #
@@ -66,6 +75,31 @@ module JDBeacon
     # that this value is always distinguishable from the sync byte. Any other 
     # value is a defined beacon ID.
     bit5 :id
+
+
+    #
+    # Returns a snapshot of the given state; in this case with the color
+    # values replaced with their raw symbols.
+    #
+    def snapshot
+
+      #Get a raw snapshot of the beacon's state.
+      snapshot = super
+
+      #Replace any of the "color fields" with their appropriate symbol name.
+      snapshot.each do |key, value| 
+
+        #If this isn't a color field, there's no need to modify it.
+        next unless self.class.color_fields.include?(key.to_sym)
+
+        #Replace the given field value with the appropriate color.
+        snapshot[key] = TEAMS.key(value)
+
+      end
+
+      snapshot
+
+    end
 
 
   end

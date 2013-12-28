@@ -39,3 +39,183 @@ body {
   margin-right: 5%;
   text-align: center;
 }
+
+@mixin triangle-up($color) {
+	width: 0;
+	height: 0;
+	border-left: 50px solid transparent;
+	border-right: 50px solid transparent;
+	border-bottom: 75px solid $color;
+}
+
+.beacon {
+  float: left;
+  width: 155px;
+  height: 148px;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 25px;
+  transition: background-image 0.1s ease-in-out;
+}
+
+.beacon.green {
+  background-image: url('../img/beacon_illuminated_green.png')
+}
+.beacon.red {
+  background-image: url('../img/beacon_illuminated_red.png')
+}
+.beacon.none {
+  background-image: url('../img/beacon_illuminated_none.png')
+}
+.beacon.off {
+  background-image: url('../img/beacon_off_none.png') !important
+}
+.beacon.disconnected,
+.disabled.beacon {
+  background-image: url('../img/beacon_disconnected.png') !important
+}
+
+
+
+/**
+ * Details for "claimed" square controls.
+ */  
+.color_label {
+  display: inline-block;
+  height: 75px;
+  vertical-align: middle;
+  margin-right: 25px;
+  font-weight: bold;
+  width: 100px;
+}
+
+#claim_controls {
+  margin-top: 25px;
+}
+
+
+.claim_square {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 3px solid #bcbcbc;
+  cursor: hand;
+  cursor: pointer;
+}
+.claim-square:disabled {
+  cursor: auto;
+}
+
+.claim_square.selected:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-width: 25px 25px 0 0;
+  border-style: solid;
+  border-color: transparent red;
+}
+
+
+.claim_square.green {
+  background-color: #2dca2d;
+  border-color: #25a725;
+}
+.claim_square.green:hover {
+  background-color: #4ed74e;
+  border-color: #2dca2d;
+}
+.claim_square.green.selected:before {
+  border-color: transparent #27b827;
+}
+
+
+.claim_square.none {
+  background-color: #cfcfcf;
+}
+.claim_square.none:hover {
+  background-color: #ddd;
+  border-color: #cfcfcf;
+}
+.claim_square.none.selected:before {
+  border-color: transparent #bbb;
+}
+
+
+.claim_square.red {
+  background-color: #ed5656;
+  border-color: #e41818;
+}
+.claim_square.red:hover {
+  background-color: #f27d7d;
+  border-color: #ed5656;
+}
+.claim_square.red.selected:before {
+  border-color: transparent #e92c2c;
+}
+
+.claim_square.spacer {
+  border-color: transparent;
+}
+
+
+.disabled .claim_square,
+.disabled .claim_square:hover {
+  background-color: #ddd !important;
+  border-color: #cfcfcf !important;
+  background-color: #ddd !important;
+  border-color: #cfcfcf !important;
+  cursor: auto;
+}
+.disabled .claim_square.selected:before {
+  border-color: transparent #bbb !important;
+}
+
+
+.color_controls {
+  display: inline-block;
+  width: 180px;
+}
+
+
+//
+// Gameplay simulation controls.
+//
+
+label.disabled,
+.disabled span {
+  color: #888;
+}
+
+#capture_probability {
+  width: 4em;
+}
+
+#capture_probability_container,
+#simulation_interval {
+  margin: 0.5em;
+}
+
+#simulation_interval {
+  width: 4.5em;
+}
+
+label input[type=checkbox] {
+  float: none !important;
+  margin-top: -3px;
+}
+
+#probabilistically_capture_label {
+  margin-left: 4em;
+}
+
+.claim_square {
+  -webkit-transition: background 0.5s linear;
+  -moz-transition: background 0.5s linear;
+  -ms-transition: background 0.5s linear;
+  -o-transition: background 0.5s linear;
+  transition: background 0.5s linear;
+}
+
+
