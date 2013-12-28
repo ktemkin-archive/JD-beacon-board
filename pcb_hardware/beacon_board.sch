@@ -24562,6 +24562,12 @@ by exp-lbrs.ulp</description>
 <text x="2.54" y="-7.62" size="1.524" layer="95" rot="R180" align="center">TSOP382</text>
 <text x="-2.54" y="7.62" size="1.778" layer="95" align="center-left">&gt;NAME</text>
 </symbol>
+<symbol name="VCC2">
+<wire x1="0.762" y1="1.27" x2="0" y2="2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="2.54" x2="-0.762" y2="1.27" width="0.254" layer="94"/>
+<pin name="VCC" x="0" y="0" visible="off" length="short" direction="sup" rot="R90"/>
+<text x="-1.016" y="3.556" size="1.778" layer="96">&gt;VALUE</text>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="LED" prefix="LED" uservalue="yes">
@@ -24657,6 +24663,50 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <connect gate="G$1" pin="OUT" pad="1"/>
 <connect gate="G$1" pin="VS" pad="3"/>
 </connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="VCC" prefix="SUPPLY">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="1" symbol="VCC2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+<library name="SparkFun">
+<description>&lt;h3&gt;SparkFun Electronics' preferred foot prints&lt;/h3&gt;
+We've spent an enormous amount of time creating and checking these footprints and parts. If you enjoy using this library, please buy one of our products at www.sparkfun.com.
+&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Licensing:&lt;/b&gt; CC v3.0 Share-Alike You are welcome to use this library for commercial purposes. For attribution, we ask that when you begin to sell your device using our footprint, you email us with a link to the product being sold. We want bragging rights that we helped (in a very small part) to create your 8th world wonder. We would like the opportunity to feature your device on our homepage.</description>
+<packages>
+</packages>
+<symbols>
+<symbol name="VCC2">
+<wire x1="0.762" y1="1.27" x2="0" y2="2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="2.54" x2="-0.762" y2="1.27" width="0.254" layer="94"/>
+<text x="-1.016" y="3.556" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="VCC" x="0" y="0" visible="off" length="short" direction="sup" rot="R90"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="VCC" prefix="P+">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="1" symbol="VCC2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
 <technologies>
 <technology name=""/>
 </technologies>
@@ -24768,6 +24818,10 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <part name="R30" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="1K"/>
 <part name="R31" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="1K"/>
 <part name="R32" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="1K"/>
+<part name="SUPPLY12" library="beacon_board" deviceset="VCC" device=""/>
+<part name="R33" library="SparkFun-Resistors" deviceset="RESISTOR" device="0805-RES" value="0R"/>
+<part name="R34" library="SparkFun-Resistors" deviceset="RESISTOR" device="0805-RES"/>
+<part name="P+1" library="SparkFun" deviceset="VCC" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -25059,6 +25113,10 @@ populating these resistors.</text>
 <instance part="R30" gate="G$1" x="241.3" y="33.02" rot="R90"/>
 <instance part="R31" gate="G$1" x="248.92" y="33.02" rot="R90"/>
 <instance part="R32" gate="G$1" x="256.54" y="33.02" rot="R90"/>
+<instance part="SUPPLY12" gate="1" x="213.36" y="139.7" smashed="yes" rot="R180"/>
+<instance part="R33" gate="G$1" x="213.36" y="147.32" rot="R90"/>
+<instance part="R34" gate="G$1" x="213.36" y="162.56" rot="R90"/>
+<instance part="P+1" gate="1" x="213.36" y="157.48" smashed="yes" rot="R180"/>
 </instances>
 <busses>
 </busses>
@@ -25325,6 +25383,15 @@ populating these resistors.</text>
 <segment>
 <pinref part="U2" gate="G$1" pin="VS"/>
 <pinref part="SUPPLY11" gate="1" pin="VCC"/>
+</segment>
+<segment>
+<pinref part="SUPPLY12" gate="1" pin="VCC"/>
+<pinref part="R33" gate="G$1" pin="1"/>
+<wire x1="213.36" y1="142.24" x2="213.36" y2="139.7" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R34" gate="G$1" pin="1"/>
+<pinref part="P+1" gate="1" pin="VCC"/>
 </segment>
 </net>
 <net name="N$5" class="0">
@@ -25746,14 +25813,20 @@ populating these resistors.</text>
 <segment>
 <pinref part="U1" gate="G$1" pin="OUT"/>
 <pinref part="R28" gate="G$1" pin="1"/>
-<wire x1="210.82" y1="167.64" x2="215.9" y2="167.64" width="0.2032" layer="91"/>
+<wire x1="210.82" y1="167.64" x2="213.36" y2="167.64" width="0.2032" layer="91"/>
+<pinref part="R34" gate="G$1" pin="2"/>
+<wire x1="213.36" y1="167.64" x2="215.9" y2="167.64" width="0.2032" layer="91"/>
+<junction x="213.36" y="167.64"/>
 </segment>
 </net>
 <net name="N$29" class="0">
 <segment>
 <pinref part="U2" gate="G$1" pin="OUT"/>
 <pinref part="R29" gate="G$1" pin="1"/>
-<wire x1="210.82" y1="152.4" x2="215.9" y2="152.4" width="0.2032" layer="91"/>
+<wire x1="210.82" y1="152.4" x2="213.36" y2="152.4" width="0.2032" layer="91"/>
+<pinref part="R33" gate="G$1" pin="2"/>
+<wire x1="213.36" y1="152.4" x2="215.9" y2="152.4" width="0.2032" layer="91"/>
+<junction x="213.36" y="152.4"/>
 </segment>
 </net>
 <net name="N$30" class="0">
