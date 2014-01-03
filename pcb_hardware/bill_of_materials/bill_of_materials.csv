@@ -1,0 +1,32 @@
+Part Designator,Qty,Value,Device,Package,Manufacturer P/N,Supplier,Supplier P/N, Price at Mfg Qty ,,Description, Extended Price ,Qty to Purchase,Qty In Stock (1/2),Total Cost (at Mfg Qty),,
+D1-4,0.16,-,LED5MM,LED5MM,YSL-R542G5C-A14,Sparkfun,COM-09661, $7.16000 ,,"Beacon LEDs(Green), 5mm or 10mm", $1.14560 ,24,89, $171.84 ,,
+D5-8,0.16,-,LED5MM,LED5MM,YSL-R547W2C-A13,Sparkfun,COM-09850, $7.16000 ,,"Beacon LEDS (White), 5mm or 10mm", $1.14560 ,24,154, $171.84 ,,
+D9-12,0.16,-,LED5MM,LED5MM,YSL-R531R3C-A13,Sparkfun,COM-09660, $7.16000 ,,"Beacon LEDs (Red), 5mm or 10mm", $1.14560 ,24,106, $171.84 ,,
+DIR1-4,4,-,LED5MM,LED5MM,IR7393C,Digikey,1080-1087-ND, $0.11200 ,,IR LED, $0.44800 ,600,, $67.20 ,,
+U1-2,2,-,TSOP382,TSOP382,TSOP38238,Digikey,751-1227-ND, $0.55900 ,,IR Receiver, $1.11800 ,300,, $167.70 ,,
+"R13-16, R18-R21",8,100,RESISTOR0805-RES,0805,ERJ-6GEYJ101V,Digikey,P100ACT-ND, $0.00544 ,,Resistor, $0.04352 ,1200,, $6.53 ,,
+"R4, R27",2,10K,RESISTOR0805-RES,0805,ERJ-6GEYJ103V,Digikey,P10KACT-ND, $0.01104 ,,Resistor, $0.02208 ,300,, $3.31 ,,
+C4,1,10nF,CAP0805,0805,CL21B103KBANNNC,Digikey,1276-1015-2-ND, $0.01420 ,,Capacitor, $0.01420 ,150,, $2.13 ,,
+"C1, C3",2,10pF,CAP0805,0805,CL21C100JBANNNC,Digikey,1276-1109-1-ND, $0.01800 ,,Capacitor, $0.03600 ,300,, $5.40 ,,
+R23-26,4,150,RESISTOR0805-RES,0805,ERJ-6GEYJ151V,Digikey,P150ACT-ND, $0.00816 ,,Resistor, $0.03264 ,600,, $4.90 ,,
+Y1,1,16MHz,CRYSTALHC49US,HC49US,ATS16B,Digikey,CTX1085-ND, $0.24000 ,,Crystal Osc., $0.24000 ,150,, $36.00 ,,
+"R1, R7-11, R30-R32",9,1K,RESISTOR0805-RES,0805,RC0805FR-071KL,Digikey,311-1.00KCRCT-ND, $0.00381 ,,Resistor, $0.03429 ,1350,, $5.14 ,,
+"C2, C5",2,1uF,CAP0805,0805,CC0805ZRY5V8BB105,Digikey,311-1358-1-ND, $0.02204 ,,Capacitor, $0.04408 ,300,, $6.61 ,,
+"R5-6, R12, R17, R22, R28-29",7,2K2 (2.2k),RESISTOR0805-RES,0805,ERJ-6GEYJ222V,Digikey,P2.2KACT-ND, $0.00544 ,,Resistor, $0.03808 ,1050,, $5.71 ,,
+R2-3,2,22,RESISTOR0805-RES,0805,RPC0805JT22R0,Digikey,RPC0805JT22R0CT-ND, $0.06824 ,,Resistor, $0.13648 ,300,, $20.47 ,,
+IC1,1,,ATMEGA32U4TQFP,TQFP44,ATMEGA32U4-AUR,Digikey,ATMEGA32U4-AURCT-ND, $4.33050 ,,USB-AVR Microcontroller, $4.33050 ,150,, $649.58 ,,
+Q1-7,7,,PZT2222A,SOT223,PZT2222AT1G,Digikey,PZT2222AT1GOSTR-ND, $0.10320 ,,NPN Transistor, $0.72240 ,1050,, $108.36 ,,
+JP1,1,,USBSMD,USB-MINIB,1734035-2 ,Newark,16M3869, $0.80000 ,,Mini-USB-B Connector, $0.80000 ,150,, $120.00 ,,
+-,1,,PCB,-,JDBB-R2,Advanced Circuits,, $5.76300 ,,Printed Circuit Board, $5.76300 ,200,, $864.45 ,,
+,,,,,,,,,,,,,,,,1089.0405
+
+
+,,,,,,Mfg Qty,150,,,Total, $14.96887 ,,," $2,589.01 ",,
+,,,,,,,,,,Budget, $21.16667 ,,," $3,175.00 ",,
+
+
+,,,,,,,,,,Digi-Key," $1,098.00000 ",,,,,
+,,,,,,,,,,Sparkfun, $515.52000 ,,,,,
+,,,,,,,,,,Newark, $120.00000 ,,,,,
+,,,,,,,,,,Advanced Circuits, $864.45000 ,,,,,
+,,,,,,,,,,," $2,597.97000 ",0.818258268,,,,
