@@ -16,56 +16,7 @@
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="beacon_states.svg">
   <defs
-     id="defs4813">
-    <filter
-       inkscape:collect="always"
-       id="filter4194"
-       x="-0.51460635"
-       width="2.0292127"
-       y="-2.3430885"
-       height="5.6861771">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="13.126482"
-         id="feGaussianBlur4196" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       id="filter4198"
-       x="-1.0363492"
-       width="3.0726983"
-       y="-2.8989126"
-       height="6.7978252">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="13.126482"
-         id="feGaussianBlur4200" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       id="filter4202"
-       x="-1.0650755"
-       width="3.130151"
-       y="-1.1219732"
-       height="3.2439463">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="13.126482"
-         id="feGaussianBlur4204" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       id="filter4206"
-       x="-0.7429941"
-       width="2.4859882"
-       y="-0.2532424"
-       height="1.5064848">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="13.126482"
-         id="feGaussianBlur4208" />
-    </filter>
-  </defs>
+     id="defs4813" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -73,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7071068"
-     inkscape:cx="-411.80467"
-     inkscape:cy="384.54294"
+     inkscape:zoom="1"
+     inkscape:cx="-279.12029"
+     inkscape:cy="345.21923"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -263,7 +214,7 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccc" />
     <rect
-       style="fill:#989898;fill-opacity:0.30414745999999998;stroke:#6a6a6a;stroke-width:2.87300000000000022;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.29493090999999999;stroke-dasharray:2.87300000000000022, 2.87300000000000022;stroke-dashoffset:0;filter:url(#filter4206)"
+       style="fill:#989898;fill-opacity:0.30414745999999998;stroke:#6a6a6a;stroke-width:2.873;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.29493090999999999;stroke-dasharray:2.873,2.873;stroke-dashoffset:0"
        id="rect4829-3-5-6"
        width="42.400818"
        height="124.4008"
@@ -273,7 +224,7 @@
        inkscape:export-xdpi="104.15"
        inkscape:export-ydpi="104.15" />
     <rect
-       style="fill:#dddddd;fill-opacity:1;stroke:#6d6d6d;stroke-width:2.00199999999999978;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.22580644000000000;stroke-dasharray:2.00199999999999978, 2.00199999999999978;stroke-dashoffset:0;filter:url(#filter4202)"
+       style="fill:#dddddd;fill-opacity:1;stroke:#6d6d6d;stroke-width:2.002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.22580644000000000;stroke-dasharray:2.002,2.002;stroke-dashoffset:0"
        id="rect5601-4-6-7"
        width="29.578709"
        height="28.078709"
@@ -283,7 +234,7 @@
        inkscape:export-xdpi="104.15"
        inkscape:export-ydpi="104.15" />
     <rect
-       style="fill:#dddddd;fill-opacity:1;stroke:#6d6d6d;stroke-width:2.08199999999999985;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.22580644000000000;stroke-dasharray:2.08199999999999985, 2.08199999999999985;stroke-dashoffset:0;filter:url(#filter4198)"
+       style="fill:#dddddd;fill-opacity:1;stroke:#6d6d6d;stroke-width:2.182;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.22580644000000000;stroke-dasharray:2.182,2.182;stroke-dashoffset:0"
        id="rect5601-1-2-7-3"
        width="30.398594"
        height="10.867371"
@@ -297,8 +248,7 @@
        transform="translate(0,-18)"
        inkscape:export-filename="/home/ktemkin/Documents/Projects/JD-beacon-board/pc_software/apps/beacon_tester/public/img/beacon_disconnected.png"
        inkscape:export-xdpi="104.15"
-       inkscape:export-ydpi="104.15"
-       style="filter:url(#filter4194)">
+       inkscape:export-ydpi="104.15">
       <path
          id="path3832"
          d="m 142.65625,727.3125 0,1.90625 21,0 0,-1.90625 -21,0 z m 41.5,0 0,1.90625 19.71875,0 0,-1.90625 -19.71875,0 z"
