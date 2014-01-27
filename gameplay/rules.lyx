@@ -1,0 +1,1211 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\usepackage{color}
+\usepackage{titlesec}
+\usepackage[none]{hyphenat}
+
+
+\definecolor{cool-blue}{RGB}{0,143,197}
+
+\titleformat{\section}
+{\color{cool-blue}\large\bfseries}
+{\color{cool-blue}\thesection}{0.5em}{}
+
+\titleformat{\subsection}
+{\normalsize\bfseries}
+{\thesection}{0.5em}{}
+
+
+
+\usepackage{enumitem}
+\setlist[enumerate]{itemsep=-1mm}
+\setlist[itemize]{itemsep=-1mm}
+
+
+\hypersetup{
+  colorlinks,
+  urlcolor=cool-blue,
+  linkcolor=black,
+  pdfborder={0 0 0}
+}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman Linux Libertine
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts true
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format pdf5
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 0.5in
+\topmargin 0.5in
+\rightmargin 0.5in
+\bottommargin 0.5in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section*
+
+\size largest
+Design Competition: Official Rules
+\end_layout
+
+\begin_layout Standard
+This document details the official rules for the Binghamton University 
+\emph on
+Junior Design Competition, 
+\emph default
+and provides a basic overview of the competition's gameplay.
+ This document is subject to change over the semester; changes will be announced
+ via Moodle and in our weekly lecture sections.
+ 
+\end_layout
+
+\begin_layout Section*
+The Teams
+\end_layout
+
+\begin_layout Standard
+Design teams of three-to-four individuals will be assigned during the first
+ week of EECE 387; and will consist of at least one electrical engineer
+ and one computer engineer.
+ As a course requirement, each team must enter and attend the competition,
+ and must enter a design constructed via collaboration between all of the
+ team members.
+ 
+\end_layout
+
+\begin_layout Standard
+The team's designs must reflect only the original work of the team members;
+ though pre-existing engineering designs and code may be used as a reference
+ work with permission of the instructor.
+ Integrating 
+\emph on
+cited selections 
+\emph default
+of code from an external engineer's open source project is likely acceptable,
+ as is asking for design opinions from external engineers; asking an external
+ engineer to contribute code or designs is not.
+ If you are not sure if a use is acceptable, ask the instructor.
+\end_layout
+
+\begin_layout Section*
+The Robot
+\end_layout
+
+\begin_layout Standard
+Each team should create and enter a single self-contained 
+\emph on
+autonomous 
+\emph default
+robotic system, which will serve as primary competing participant.
+ While each team may only enter a single design, teams may find it beneficial
+ to create multiple 
+\begin_inset Quotes eld
+\end_inset
+
+copies
+\begin_inset Quotes erd
+\end_inset
+
+ of a design to aid in testing; and to provide a backup in case of electrical
+ or mechanical failure.
+\end_layout
+
+\begin_layout Standard
+While the choice of a robotic platform is left to the teams, teams will
+ be selected to ensure that at least one member of each team owns a 
+\begin_inset CommandInset href
+LatexCommand href
+name "Digilent RDK platform"
+target "http://www.digilentinc.com/Products/Detail.cfm?NavPath=2,398,1126&Prod=RDK-LINE"
+
+\end_inset
+
+ in order to reduce costs to the student.
+ To ensure that the competition is fair to all entrants, the robot platform
+ used in this year's sophomore-level classes (the 
+\emph on
+Dagu
+\begin_inset space ~
+\end_inset
+
+Rover
+\begin_inset space ~
+\end_inset
+
+5
+\emph default
+) cannot be used without prior instructor approval.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ In addition to the requirements above, each robot must meet the following
+ requirements:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Wrap figure
+lines 0
+placement i
+overhang 0in
+width "25col%"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/robot_limits.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Size limits
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-2em}
+\end_layout
+
+\end_inset
+
+To ensure that the robot fits into each possible playing field, the robot
+ must be less than t
+\emph on
+wo feet wide
+\emph default
+; and less than 
+\emph on
+two feet long
+\emph default
+; measured from the furthest produding points.
+\end_layout
+
+\begin_layout Itemize
+To ensure that robots cannot interact with other competition areas, robots
+ must be less than 
+\emph on
+one foot tall
+\emph default
+, measured from the highest point.
+\end_layout
+
+\begin_layout Itemize
+All robots must be completely autonomous: that is, no human interaction
+ is allowed.
+ Once the robot has entered the field area, it cannot receive any communications
+ from outside of the field area.
+ 
+\end_layout
+
+\begin_layout Itemize
+Robots may not be designed to intentionally interfere with the gameplay
+ elements or opposing team.
+ Unintentional interference may be acceptable--- for example, ultrasonic
+ sensors may be employed; but note the possibility of unintentional interference
+ from the other team.
+ If you suspect your robot may produce (or receive) interference, ask the
+ instructor if your design is acceptable.
+\end_layout
+
+\begin_layout Itemize
+All robots must be designed for safety; even under failure conditions.
+ As a safety precaution, your robot 
+\emph on
+may not use lithium-based battery technologies 
+\emph default
+(e.g.
+ Li-ion/Li-Pol); while these batteries offer high energy densities, they
+ can pose a fire hazard if incorrectly designed or used.
+ If you are unsure as to the safety of any design or technology, ask the
+ instructor.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+The Field
+\end_layout
+
+\begin_layout Standard
+\begin_inset Wrap figure
+lines 0
+placement O
+overhang 0in
+width "50text%"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/field_overview.eps
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Overview of a possible field setup.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+All competition gameplay will take place within a 6' x 6' square area, which
+ is enclosed on all sides by foot-tall immovable walls.
+ The field's walls are designed to provide a boundary for the field; they
+ both constrain the competing robots and block light from entering the playing
+ field at low angles---preventing any light from entering from the side
+ of the field.
+ 
+\end_layout
+
+\begin_layout Standard
+Walls are opaque and matte to reduce reflection, but do not completely absorb
+ incoming light: some minor reflections are to be expected in both the visible
+ and IR ranges.
+ Samples of the wall material will be available in the lab after the first
+ few weeks of the semester for characterization, if desired.
+\end_layout
+
+\begin_layout Standard
+The floor of the field will be composed of a 
+\begin_inset Quotes eld
+\end_inset
+
+non-slip
+\begin_inset Quotes erd
+\end_inset
+
+ high friction material, intended to afford robots a good amount of traction
+ during gameplay; though a good design will not make any assumptions about
+ the flooring material.
+ More detailed information about the characteristics of the flooring material
+ will be made available as a separate document.
+\end_layout
+
+\begin_layout Section*
+The Beacons
+\end_layout
+
+\begin_layout Standard
+Each field will contain three 
+\emph on
+beacon towers
+\series bold
+ 
+\series default
+\emph default
+(or 
+\begin_inset Quotes eld
+\end_inset
+
+beacons
+\begin_inset Quotes erd
+\end_inset
+
+); which will be situated at various strategic locations.
+ The locations of these beacons will not be available to the participants
+ prior to the competition; robots may not have any information regarding
+ the beacon's location prior to entering the field.
+\end_layout
+
+\begin_layout Standard
+Beacon towers are approximately 9
+\begin_inset Quotes erd
+\end_inset
+
+ tall, and have a width and depth of 2.75
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The shell of each tower is composed of a matte black acrylic, which is
+ designed to absorb IR and visible light---the towers thus do not reflect
+ a significant amount of visible or IR light.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Wrap figure
+lines 15
+placement i
+overhang 0in
+width "30col%"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/beacon_tower.eps
+	width 30text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Beacon dimensions
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Two windows exist on the side of each beacon tower:
+\end_layout
+
+\begin_layout Itemize
+At the top of each beacon, a 2
+\begin_inset Quotes erd
+\end_inset
+
+ tall by 2
+\begin_inset Quotes erd
+\end_inset
+
+ wide window exists, exposing high-power LED lights in 
+\emph on
+red
+\emph default
+, 
+\emph on
+white
+\emph default
+, and 
+\emph on
+green
+\emph default
+.
+ These lights will only display a single color at a time, and are intended
+ to broadcast the beacon's current status and location to competing robots
+ in all directions.
+ The behavior of these lighting elements is described in the gameplay section
+ below.
+\end_layout
+
+\begin_layout Itemize
+At approximately 4.8
+\begin_inset Quotes erd
+\end_inset
+
+ from the ground, a 0.75
+\begin_inset Quotes erd
+\end_inset
+
+ tall by 2
+\begin_inset Quotes erd
+\end_inset
+
+ wide window exists, exposing a set of infrared (IR) transponders.
+ As an element of the competition, robots will need to both send to and
+ receive data from the three beacons in play.
+ The transmission power of these IR responders has been limited such that
+ a robot will need to be reasonably close to a given beacon in order to
+ effectively communicate; the communication distances possible depend on
+ the design of the competing robot's IR receiver.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Standard
+Beacons are not firmly held in place, though their bases are weighted to
+ reduce the chance of a beacon tipping over if struck.
+ Competitors will likely wish to avoid beacon collisions, as a sufficiently
+ forceful collision may 
+\begin_inset Quotes eld
+\end_inset
+
+unplug
+\begin_inset Quotes erd
+\end_inset
+
+ a beacon from the competition system or knock it over---preventing the
+ competing robot from communicating with the beacon.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-2ex}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+The Obstacles
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1ex}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Wrap figure
+lines 0
+placement o
+overhang 0in
+width "25col%"
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centerline{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/obstacles.eps
+	width 20text%
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Obstacle height
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Each field will also contain at least two 
+\emph on
+obstacles
+\emph default
+, which prevent direct movement throughout the field, as they may occupy
+ the space directly between a robot and any surrounding beacons.
+ Obstacles will be approximately 6
+\begin_inset Quotes erd
+\end_inset
+
+ tall, and thus will not block direct line-of-sight between a participating
+ robot and the bright visible-spectrum lights atop the nearby beacons.
+ The height of the obstacles 
+\emph on
+will
+\emph default
+ block the IR light used for communications.
+\end_layout
+
+\begin_layout Standard
+The length and width of obstacles will vary, but obstacles will not exceed
+ 3' in either horizontal dimension.
+ Granted these dimensions, obstacles will be placed as to allow a maximum-dimens
+ion robot (2'x2'x1') to reach each of the beacons.
+ No obstacles will be placed between the robot and the closest beacon; though
+ object avoidance may be necessary to reach the remaining two beacons.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-2ex}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1ex}
+\backslash
+hspace{0.47
+\backslash
+textwidth}
+\end_layout
+
+\end_inset
+
+ Gameplay
+\end_layout
+
+\begin_layout Standard
+\begin_inset Wrap figure
+lines 20
+placement i
+overhang 0in
+width "46col%"
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-8ex}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/competition_fields.eps
+	width 45text%
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Competition setup
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Competition-Setup"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Competition play will feature two identical playing fields, and will allow
+ two participating teams to complete head-to-head.
+ Each participating a team will be assigned a color: one team will be considered
+ the 
+\emph on
+red
+\emph default
+ team, while the other team will be considered 
+\emph on
+green
+\emph default
+.
+ 
+\begin_inset Wrap figure
+lines 1
+placement o
+overhang 0in
+width "46text%"
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-14ex}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/beacon_claimed.eps
+	width 45text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+Claiming
+\begin_inset Quotes erd
+\end_inset
+
+ a Beacon
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Claiming-a-Beacon"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Each round of gameplay will last exactly three minutes; during which two
+ competing robots will vie for control over the three beacons present on
+ their field.
+ At the start of each round, each beacon will display white light (Figure
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Competition-Setup"
+
+\end_inset
+
+), indicating that it has not yet been 
+\emph on
+claimed
+\emph default
+ by either team.
+ To claim a beacon, a robot must navigate to a given beacon's location,
+ and then communicate with the beacon via a simple IR protocol.
+ 
+\begin_inset Wrap figure
+lines 17
+placement i
+overhang 0in
+width "46col%"
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{15.5ex}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/beacon_claimed_again.eps
+	width 45text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+Claiming
+\begin_inset Quotes erd
+\end_inset
+
+ another team's beacon
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Claiming-another-team's"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-17.5ex}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Once claimed, the corresponding beacons on both sides will 
+\begin_inset Quotes eld
+\end_inset
+
+change color
+\begin_inset Quotes erd
+\end_inset
+
+ to indicate the owning team---after which its new color will be displayed
+ using the lights atop the beacon.
+ As an example, if a beacon has been claimed by the 
+\begin_inset Quotes eld
+\end_inset
+
+red
+\begin_inset Quotes erd
+\end_inset
+
+ team, as in Figure
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Claiming-a-Beacon"
+
+\end_inset
+
+, only the beacon's 
+\emph on
+red
+\emph default
+ LEDs will be enabled.
+ 
+\end_layout
+
+\begin_layout Standard
+In addition to claiming 
+\emph on
+unclaimed
+\emph default
+ beacons, it's possible to claim a beacon owned by the opposing team, as
+ in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Claiming-another-team's"
+
+\end_inset
+
+.
+ Claiming another team's beacon may be more advantageous, in some situations:
+ in addition to scoring the claiming team a beacon, it also removes a beacon
+ from the opposing team.
+ In other situations, it may be more risky: as the other team's robot may
+ still be nearby, and may rapidly re-claim the beacon! If more than one
+ robot is attempting to claim a beacon, claims will be executed in the order
+ received--- so the most recent claim attempt will result in control of
+ the beacon.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Competition Sequence
+\end_layout
+
+\begin_layout Standard
+The general gameplay sequence for a single round of competition play will
+ be as follows:
+\end_layout
+
+\begin_layout Enumerate
+Prior to the start of each round, each robot will be placed within a 2.5'
+ x 2.5' pen inside of the playing field, which will prohibit the robot's
+ motion.
+ To avoid damage to your robot's motors, it's recommended that you avoid
+ running into the sides of the pen.
+\end_layout
+
+\begin_layout Enumerate
+At the start of the round, the pen will be lifted, and the timer will start.
+\end_layout
+
+\begin_layout Enumerate
+The robots will have three minutes to vie for ownership of the three beacons
+ present on each field.
+ 
+\end_layout
+
+\begin_layout Enumerate
+After three minutes, the timer will be halted, and the beacons will no longer
+ accept IR communications.
+ A camera will capture the location of each robot at the end the round.
+\end_layout
+
+\begin_layout Enumerate
+Scores will be computed, and the winner will be declared.
+ The winning team will move on to the subsequent round.
+\end_layout
+
+\begin_layout Section*
+Scoring
+\end_layout
+
+\begin_layout Standard
+At the end of the round, points will be awarded as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<row topspace="default" bottomspace="default" interlinespace="default">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Criterion
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default" interlinespace="default">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+30 points
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+for each beacon owned at the end of the round.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default" interlinespace="default">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8 points
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+to the team who captured the first beacon, according to the gameplay software.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default" interlinespace="default">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2 points
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+to the team whose robot is 
+\emph on
+furthest 
+\emph default
+from the starting point.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Scoring Guide
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ This distribution of points yields the following ways to win:
+\end_layout
+
+\begin_layout Itemize
+If one team owns more beacons than another at the end of the game, that
+ team wins.
+\end_layout
+
+\begin_layout Itemize
+If both teams have captured the same amount of beacons, the team who captured
+ a beacon 
+\emph on
+first---
+\emph default
+and is thus likely faster when capturing beacons---
+\emph on
+ 
+\emph default
+wins.
+ 
+\end_layout
+
+\begin_layout Itemize
+If no beacons have been captured, the team who has moved the furthest from
+ the starting point--- and thus was more likely to find a beacon to capture---
+ wins.
+\end_layout
+
+\begin_layout Standard
+In the event of a true zero-to-zero tie, the winner will be decided by the
+ course staff.
+\end_layout
+
+\end_body
+\end_document
