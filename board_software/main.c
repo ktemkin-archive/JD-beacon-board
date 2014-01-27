@@ -35,6 +35,7 @@
 #include "lights.h"
 #include "ir_comm.h"
 #include "pc_comm.h"
+#include "debug.h"
 
 #include "main.h"
 
@@ -101,6 +102,11 @@ void set_up_hardware() {
   //Set up all of the peripherals...
   set_up_lights();
   set_up_ir_comm();
+
+  //Enable the backend debug inferface, which is useful
+  //for debugging student assemblies-- and designs!
+  enable_debug_backend();
+  printf("Debug connection established.\n");
 
   //Set up the PC connection
   connect_to_pc();

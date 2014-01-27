@@ -42,7 +42,7 @@ responder_dfu: responder.hex
 	$(OBJCOPY) -O ihex $^ $@
 
 #Dependency list for the main program.
-main.elf: timers.h timers.o lights.o lights.h ir_comm.o ir_comm.h state.h pc_comm.h pc_comm.c usb_serial/usb_serial.o usb_serial/usb_serial.h frequency.h main.h 
+main.elf: timers.h timers.o lights.o lights.h ir_comm.o ir_comm.h state.h pc_comm.h pc_comm.c debug.h debug.c usb_serial/usb_serial.o usb_serial/usb_serial.h frequency.h main.h 
 
 #Dependency lists for each of the test programs.
 responder.elf: timers.h timers.o lights.o lights.h ir_comm.o ir_comm.h frequency.h
