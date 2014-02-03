@@ -1,0 +1,578 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\usepackage{color}
+\usepackage{titlesec}
+\usepackage[none]{hyphenat}
+
+
+\definecolor{cool-blue}{RGB}{0,143,197}
+
+\titleformat{\section}
+{\color{cool-blue}\large\bfseries}
+{\color{cool-blue}\thesection}{0.5em}{}
+
+\titleformat{\subsection}
+{\normalsize\bfseries}
+{\thesection}{0.5em}{}
+
+
+
+\usepackage{enumitem}
+\setlist[enumerate]{itemsep=-1mm}
+\setlist[itemize]{itemsep=-1mm}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman Linux Libertine
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts true
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format pdf5
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 0.5in
+\topmargin 0.5in
+\rightmargin 0.5in
+\bottommargin 0.5in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section*
+
+\size largest
+Beacon Board: Assembly Plans
+\end_layout
+
+\begin_layout Standard
+Before you begin, take a moment to look over the 
+\emph on
+Bill of Materials
+\emph default
+ for our beacon boards.
+ Verify that all of the parts mentioned on the Bill of Materials are present
+ in your kit.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Part 1: PC Interface & Controller
+\end_layout
+
+\begin_layout Standard
+First, you'll assemble the 
+\emph on
+microcontroller
+\emph default
+ and 
+\emph on
+interfacing logic
+\emph default
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Populate 
+\noun on
+JP1
+\noun default
+, the USB header.
+ For this part, you'll need to ensure you solder the five pads which are
+ slightly occluded by the USB header, as well as the four 
+\begin_inset Quotes eld
+\end_inset
+
+structural
+\begin_inset Quotes erd
+\end_inset
+
+ pads on the header itself.
+ It's better to put too little solder on the five small pads rather than
+ too much: you can always add more later.
+ If you need help, you can ask for assistance from the undergraduate course
+ assistants.
+\end_layout
+
+\begin_layout Enumerate
+Populate 
+\noun on
+IC1
+\noun default
+, the AVR microcontroller.
+ Be sure to place the 
+\emph on
+dot
+\emph default
+ on the microcontroller in the same direction as the dot on the silkscreen.
+\end_layout
+
+\begin_layout Enumerate
+Populate the resistors and capacitors that support the microcontroller:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Populate R2 and R3, located next to the USB port.
+\end_layout
+
+\begin_layout Enumerate
+Populate C2 and C5, the two capacitors on either side of the USB connectors.
+\end_layout
+
+\begin_layout Enumerate
+Populate C4, to the left side of the microcontroller.
+\end_layout
+
+\begin_layout Enumerate
+Populate R1 and R4, to the top of the microcontroller.
+\end_layout
+
+\begin_layout Enumerate
+Populate C3 and C1, to the right of the microcontroller---above and below
+ the slot for the system clock.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Populate Y1, the 16MHz crystal oscillator.
+ 
+\end_layout
+
+\begin_layout Standard
+After your microcontroller and interfacing logic have been assembled, carefully
+ inspect your each of your components; ensure that there are no bridges
+ or shorts.
+ Several magnifying lenses are available in the student shop, which may
+ help with your analysis.
+\end_layout
+
+\begin_layout Standard
+Once you're sure that your components are correctly soldered, return to
+ the lab and attach your beacon board via USB.
+ It should now show up as a USB device on your computer:
+\end_layout
+
+\begin_layout Subsection*
+Testing on Linux
+\end_layout
+
+\begin_layout Standard
+If you're connecting your board to one of the lab computers (recommended),
+ or another Linux computer, you can check to see if the device is recognized
+ by running the following terminal command:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+lsusb
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+If your board is working correctly, the list will feature a device described
+ as 
+\emph on
+Atmel Corporation:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\emph default
+03eb:2ffB Atmel Corporation
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This is your microcontroller! If this text appears, you're ready to move
+ on to the next part.
+\end_layout
+
+\begin_layout Subsection*
+Testing on Windows
+\end_layout
+
+\begin_layout Standard
+When you first attach the board, Windows will announce that a new 
+\emph on
+Atmel DFU 
+\emph default
+device has been connected.
+ If this pop-up appears, your microcontroller is correctly soldered--- and
+ you're ready to move on to the next part!
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+If not, open the Device Manager:
+\end_layout
+
+\begin_layout Itemize
+On 
+\emph on
+Windows XP, 
+\emph default
+select 
+\begin_inset Quotes eld
+\end_inset
+
+Run
+\begin_inset Quotes erd
+\end_inset
+
+ from the start menu, and enter the command 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+devicemgr
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Press enter to launch the device manager.
+\end_layout
+
+\begin_layout Itemize
+On 
+\emph on
+Windows Vista/7/8, 
+\emph default
+type 
+\begin_inset Quotes eld
+\end_inset
+
+Device Manager
+\begin_inset Quotes erd
+\end_inset
+
+ into the start menu.
+\end_layout
+
+\begin_layout Standard
+In the device manager, look for a category labeled 
+\emph on
+Atmel DFU.
+ 
+\emph default
+If this category is present, your microcontroller has been successfully
+ soldered!
+\end_layout
+
+\begin_layout Subsection*
+Troubleshooting
+\end_layout
+
+\begin_layout Standard
+If your device isn't working, you'll want to thoroughly check your soldered
+ board against the schematic.
+ A basic debugging process might go as follows:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Verify that your device is correctly receiving power.
+\series default
+
+\begin_inset Newline newline
+\end_inset
+
+A good initial rule for debugging a board: verify your known voltages! In
+ this case, a good first step is to find a microcontroller pin that should
+ be connected to VCC, and verify that it is correctly receiving the USB
+ power supply of +5V, with respect to a GND pin.
+ As you verify voltages, it may help to check off the nets printed on your
+ schematics.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Verify that all of the connections that 
+\emph on
+should
+\emph default
+ be present are actually implemented.
+\begin_inset Newline newline
+\end_inset
+
+
+\series default
+Using the continuity mode of your multimeter, check to make sure that all
+ of the appropriate connections exist.
+ As an example, you might place one lead on the top of R3, and verify that
+ it's making a good connection to D- pin on your microcontroller.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Check your design for 
+\begin_inset Quotes eld
+\end_inset
+
+obvious
+\begin_inset Quotes erd
+\end_inset
+
+ shorts.
+\begin_inset Newline newline
+\end_inset
+
+
+\series default
+Using the continuity mode of your multimeter, check to make sure there 
+\emph on
+isn't
+\emph default
+ continuity between VCC and ground.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Verify known resistance values.
+\begin_inset Newline newline
+\end_inset
+
+
+\series default
+Using the ohm mode of your multimeter, verify that signal paths have the
+ appropriate resistance values.
+ As an example, you might check the resistance between the bottom of R2,
+ and the D+ pin on your microcontroller; verifying that this value is close
+ to 22 ohms.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Verify that your clock is functioning.
+\begin_inset Newline newline
+\end_inset
+
+
+\series default
+Using the oscilloscope, probe the voltage 
+\emph on
+across
+\emph default
+ your 16MHz clock crystal.
+ Verify that the signal that appears has a frequency of 16MHz--- though
+ note that its precise shape doesn't matter.
+\end_layout
+
+\begin_layout Standard
+If you've verified the above and still need help, ask for assistance from
+ the TAs, UCAs, or instructor.
+\end_layout
+
+\begin_layout Subsection*
+Part 2: The Beacon LEDs
+\end_layout
+
+\begin_layout Standard
+Next, you'll implement the Beacon LEDs, and their supporting hardware:
+\end_layout
+
+\begin_layout Enumerate
+Populate R13-R16, the current limiting resistors for the white LEDs.
+\end_layout
+
+\begin_layout Enumerate
+Populate R18-R21, the current limiting resistors for the green LEDs.
+\end_layout
+
+\begin_layout Enumerate
+Populate R23-R26, the current limiting resistors for the red LEDs.
+\end_layout
+
+\begin_layout Enumerate
+Populate R12, R17, and R22, the input resistors for the LED drive transistors.
+\end_layout
+
+\begin_layout Enumerate
+Populate Q3-Q5, the LED drive transistors.
+\end_layout
+
+\begin_layout Enumerate
+Populate the white LEDs, as described below--- you can discern the white
+ LEDs by their shorter legs; if you look into the top of these LED's lens,
+ you should notice a yellow substrate.
+ Be sure to observe the polarity of these LEDs: the flat side of the LED
+ goes towards the flat side of the silkscreen.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Populate the LED next to R15 normally, with the LED facing straight up from
+ the board.
+ Note that the student LEDs have smaller legs than the competition LEDs,
+ and thus fit loosely into the through-holes.
+ As you fill this hole with solder, the LEDs will become held tightly in
+ the hole.
+\end_layout
+
+\begin_layout Enumerate
+Populate the LED next to R14 on the reverse side of the board: the LED's
+ head should face down, towards the table.
+ Be sure you're still observing correct key polarity.
+\end_layout
+
+\begin_layout Enumerate
+Populate the LED next to R13 by bending its leads by 90 degrees, so the
+ LED faces the bottom edge of the board.
+\end_layout
+
+\begin_layout Enumerate
+Populate the LED next to R16 by bending its leads by 90 degrees in the opposite
+ direction, so the LED faces the top edge of the board.
+\end_layout
+
+\begin_layout Enumerate
+Once the LEDs are fully soldered, trim their leads using the provided flush
+ cutters.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Populate the four 
+\emph on
+red
+\emph default
+ LEDs in the same way.
+ You can discern the red LEDs by looking directly into the lens of the LEDs:
+ their substrate is surrounded by a red ring.
+\end_layout
+
+\begin_layout Enumerate
+Populate the four 
+\emph on
+green 
+\emph default
+LEDs in the same way.
+ You should have eight LEDs remaining; the green LEDs will be the four larger
+ ones.
+\end_layout
+
+\begin_layout Subsection*
+Part 3: The IR Communications hardware.
+\end_layout
+
+\begin_layout Standard
+Finally, you'll implement the IR communications hardware:
+\end_layout
+
+\begin_layout Enumerate
+Populate R5, R6, R28, and R29; the base transistors for the IR hardware.
+\end_layout
+
+\begin_layout Enumerate
+Populate R7-R10, the current limiting resistors for the IR transmitters.
+\end_layout
+
+\begin_layout Enumerate
+Populate R27, the pull-up resistor for the IR receiver NAND gate.
+\end_layout
+
+\begin_layout Enumerate
+Populate the four remaining LEDs in the same way as you did the four beacon
+ LEDs.
+ You should be done!
+\end_layout
+
+\begin_layout Standard
+Once you've finished the instructions above, your device is 
+\emph on
+assembled
+\emph default
+--- and ready for testing and characterization during our third week.
+\end_layout
+
+\end_body
+\end_document
