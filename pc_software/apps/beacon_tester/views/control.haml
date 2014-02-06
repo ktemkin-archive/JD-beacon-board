@@ -66,7 +66,9 @@
       .row-fluid
         .span12
           %h4 Event Log
-          .well An event log would appear here, were it complete.
+          .well 
+            %ul#event_log
+              %li <strong>#{Time.now.strftime('%I:%M:%S %p')}</strong> - Application started.
         
   = haml :'shared/foot'
   = js :control

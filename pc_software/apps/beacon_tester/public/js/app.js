@@ -8,7 +8,7 @@
 
     BeaconTestApplication.prototype.connected_board_api = '/api/connected_board';
 
-    BeaconTestApplication.prototype.heartbeat_interval = 500;
+    BeaconTestApplication.prototype.heartbeat_interval = 1000;
 
     BeaconTestApplication.prototype.possible_colors = ['green', 'none', 'red'];
 
@@ -20,6 +20,12 @@
       this._simulation_is_enabled = __bind(this._simulation_is_enabled, this);
 
       this.opponent_color = __bind(this.opponent_color, this);
+
+      this._log_event = __bind(this._log_event, this);
+
+      this._log_state_on_connection = __bind(this._log_state_on_connection, this);
+
+      this._log_state_changes = __bind(this._log_state_changes, this);
 
       this._simulation_capture_should_be_applied = __bind(this._simulation_capture_should_be_applied, this);
 
@@ -59,6 +65,7 @@
         red: $('#affiliation_red'),
         green: $('#affiliation_green')
       };
+      this.event_log = $('#event_log');
       this.simulation_controls = {
         simulation_enable: $("#simulate_capture"),
         simulation_interval: $("#simulation_interval"),
@@ -70,7 +77,7 @@
       this.set_up_affiliation_panels();
       this.set_up_simulation_panel();
       this.initialize_simulation();
-      this.state = {};
+      this.state = null;
     }
 
     BeaconTestApplication.prototype.perform_api_call = function(api, argument, handler) {
@@ -129,7 +136,8 @@
     };
 
     BeaconTestApplication.prototype.run = function() {
-      return setInterval(this.update_status, this.heartbeat_interval);
+      setInterval(this.update_status, this.heartbeat_interval);
+      return this.ensure_beacon_is_on();
     };
 
     BeaconTestApplication.prototype.update_status = function() {
@@ -147,11 +155,15 @@
       if (this.updating) {
         return;
       }
-      this.state = status;
       if (status.error != null) {
         this._apply_disconnected_status();
         return;
       }
+      if (this.state === null) {
+        this.ensure_beacon_is_on();
+      }
+      this._log_state_changes(this.state, status);
+      this.state = status;
       this.manual_control_panel.removeClass('disabled');
       this.display_beacon_owner(status.owner);
       return this.display_beacon_affiliation(status.affiliation);
@@ -167,8 +179,12 @@
     };
 
     BeaconTestApplication.prototype._apply_disconnected_status = function() {
+      if (this.state) {
+        this._log_event("A beacon was disconnected.");
+      }
       this.manual_control_panel.addClass('disabled');
-      return this.owner_graphic.attr('class', "beacon disconnected");
+      this.owner_graphic.attr('class', "beacon disconnected");
+      return this.state = null;
     };
 
     BeaconTestApplication.prototype._set_selection = function(selected, collection) {
@@ -203,7 +219,8 @@
     };
 
     BeaconTestApplication.prototype.ensure_beacon_is_on = function() {
-      if (!(this.state.id > 0)) {
+      var _ref;
+      if (!(((_ref = this.state) != null ? _ref.id : void 0) > 0)) {
         return this.perform_api_call('mode', 'on');
       }
     };
@@ -212,7 +229,7 @@
       this.start_update();
       this.ensure_beacon_is_on();
       this.display_beacon_owner(owner);
-      return this.perform_api_call('claim', owner, this.update_complet);
+      return this.perform_api_call('claim', owner, this.update_complete);
     };
 
     BeaconTestApplication.prototype.set_affiliation = function(affiliation) {
@@ -273,8 +290,63 @@
       return Math.random() <= probability;
     };
 
+    BeaconTestApplication.prototype._log_state_changes = function(old_state, new_state) {
+      var old_owner;
+      if (old_state === null && new_state !== null) {
+        this._log_state_on_connection(new_state);
+        return;
+      }
+      if (old_state.owner !== new_state.owner) {
+        if (new_state.owner === "none") {
+          return this._log_event("A beacon was taken from the <strong>" + old_state.owner + "</strong> team, and is now <strong>unclaimed</strong>.");
+        } else {
+          old_owner = old_state.owner === "none" ? "unclaimed" : old_state.owner;
+          return this._log_event("The <strong>" + new_state.owner + "</strong> team has claimed a <strong>" + old_state.owner + "</strong> beacon!");
+        }
+      }
+    };
+
+    BeaconTestApplication.prototype._log_state_on_connection = function(new_state) {
+      var owned_status;
+      console.log(new_state);
+      if (!((new_state.affiliation != null) && (new_state.owner != null))) {
+        return;
+      }
+      if (new_state.owner === "none") {
+        owned_status = "unclaimed";
+      } else {
+        owned_status = "claimed by the " + new_state.owner + " team";
+      }
+      return this._log_event("A beacon was connected on the <strong>" + new_state.affiliation + " side of the board</strong>; and is currently <strong>" + owned_status + "<strong>.");
+    };
+
+    BeaconTestApplication.prototype._log_event = function(message, time) {
+      var new_event;
+      if (time == null) {
+        time = null;
+      }
+      time || (time = new Date());
+      new_event = $(document.createElement('li'));
+      new_event.append("<strong>" + (this._create_log_time(time)) + "</strong>\t- " + message);
+      return this.event_log.prepend(new_event);
+    };
+
+    BeaconTestApplication.prototype._create_log_time = function(time) {
+      var am_pm, hours, timestamp;
+      if (time == null) {
+        time = Date;
+      }
+      hours = (time.getHours() % 12) || 12;
+      am_pm = time.getHours() > 11 ? "PM" : "AM";
+      timestamp = [hours, time.getMinutes(), time.getSeconds()].join(':');
+      timestamp = timestamp.replace(/\b(\d)\b/g, "0$1");
+      timestamp = timestamp.replace(/\s/g, "");
+      return "" + timestamp + " " + am_pm;
+    };
+
     BeaconTestApplication.prototype.opponent_color = function() {
-      switch (this.state.affiliation) {
+      var _ref;
+      switch ((_ref = this.state) != null ? _ref.affiliation : void 0) {
         case 'red':
           return 'green';
         case 'green':

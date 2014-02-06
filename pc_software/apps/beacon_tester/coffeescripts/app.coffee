@@ -4,7 +4,7 @@ class BeaconTestApplication
   status_api:          '/api/status'
   connected_board_api: '/api/connected_board'
 
-  heartbeat_interval: 500
+  heartbeat_interval: 1000
 
   #Specifies all possible colors for the beacon.
   possible_colors: ['green', 'none', 'red']
@@ -22,9 +22,10 @@ class BeaconTestApplication
       red:    $('#claim_red')
       green:  $('#claim_green')
       none:   $('#claim_none')
-    @affiliation_panels = 
+    @affiliation_panels =
       red:    $('#affiliation_red')
       green:  $('#affiliation_green')
+    @event_log = $('#event_log')
 
     #TODO: DRY
     @simulation_controls =
@@ -44,8 +45,7 @@ class BeaconTestApplication
     @initialize_simulation()
 
     #Set the "last known" status to null.
-    @state = {}
-
+    @state = null
 
 
   #
@@ -75,8 +75,8 @@ class BeaconTestApplication
   set_up_claim_panels: =>
 
     #This is, unfortunately, necessary-- due to CoffeeScript's odd scoping.
-    @claim_panels.red.click => @claim_beacon('red')
-    @claim_panels.none.click => @claim_beacon('none')
+    @claim_panels.red.click   => @claim_beacon('red')
+    @claim_panels.none.click  => @claim_beacon('none')
     @claim_panels.green.click => @claim_beacon('green')
 
 
@@ -86,7 +86,7 @@ class BeaconTestApplication
   #
   set_up_affiliation_panels: =>
     @affiliation_panels.green.click => @set_affiliation('green')
-    @affiliation_panels.red.click => @set_affiliation('red')
+    @affiliation_panels.red.click   => @set_affiliation('red')
 
 
   #
@@ -112,6 +112,9 @@ class BeaconTestApplication
   
     #Set up the status update 'heartbeat' function.
     setInterval(@update_status, @heartbeat_interval)
+
+    #If we can, attempt to turn the beacon on.
+    @ensure_beacon_is_on()
 
 
   #
@@ -146,20 +149,25 @@ class BeaconTestApplication
     #as this can cause "flashes" of outdated information.
     return if @updating
 
-    #Store the most recent beacon status.
-    @state = status
-
     #If we weren't able to connect to the device for any reason,
     #display the beacon as disconnected.
     if status.error?
       @_apply_disconnected_status()
       return
 
-    #TODO: Handle board being off.
-    
+    #If the last state was null, we've likely just reconnected
+    #the beacon. Make sure the beacon is on!
+    if @state is null
+      @ensure_beacon_is_on()
+
+    #Log any changes in the beacon's status.
+    @_log_state_changes(@state, status)
+
+    #Store the most recent beacon status.
+    @state = status
+
     #Ensure that the "manual control panel" is disabled.
     @manual_control_panel.removeClass('disabled')
-
 
     #Display the relevant information about the beacon board.
     @display_beacon_owner(status.owner)
@@ -186,9 +194,18 @@ class BeaconTestApplication
   # Indicates that the beacon is disconnected.
   #
   _apply_disconnected_status: ->
+
+    #If we were previously connected, then apply a disconnected state.
+    #TODO: Move this to log_state_change?
+    @_log_event("A beacon was disconnected.") if @state
+
+    #Set the manual controls to a "disabled" appearance,
+    #and show that the beacon is disconnected.
     @manual_control_panel.addClass('disabled')
     @owner_graphic.attr('class', "beacon disconnected")
 
+    #Set the beacon's "state" to null.
+    @state = null
 
 
 
@@ -223,7 +240,7 @@ class BeaconTestApplication
   # TODO: Replace me with a more comprehensive mode system!
   #
   ensure_beacon_is_on: =>
-    @perform_api_call('mode', 'on') unless @state.id > 0
+    @perform_api_call('mode', 'on') unless @state?.id > 0
 
 
   #
@@ -240,7 +257,7 @@ class BeaconTestApplication
 
     #And set the beacon's owner.
     @display_beacon_owner(owner)
-    @perform_api_call('claim', owner, @update_complet)
+    @perform_api_call('claim', owner, @update_complete)
 
 
   #
@@ -337,18 +354,94 @@ class BeaconTestApplication
     return Math.random() <= probability
 
 
+  #
+  # Logs any state changes that occur between two states to the event log.
+  #
+  _log_state_changes: (old_state, new_state) =>
+
+    #If we've just connected a beacon, log its state.
+    if old_state is null and new_state isnt null
+      @_log_state_on_connection(new_state)
+      return
+
+
+    #If the beacon has changed owners, report it!
+    unless old_state.owner is new_state.owner
+     
+      #If this beacon is being manually forced to "unclaimed", repor that.
+      if new_state.owner is "none"
+        @_log_event("A beacon was taken from the <strong>#{old_state.owner}</strong> team, and is now <strong>unclaimed</strong>.")
+
+      #Otherwise, manually report the change.
+      else
+        old_owner = if old_state.owner == "none" then "unclaimed" else old_state.owner
+        @_log_event("The <strong>#{new_state.owner}</strong> team has claimed a <strong>#{old_state.owner}</strong> beacon!")
+
+
+  #
+  # Logs the state of the beacon on a connection.
+  #
+  _log_state_on_connection: (new_state) =>
+    console.log new_state
+    return unless new_state.affiliation? and new_state.owner?
+
+    #Create a message that describes the beacon's current claim status.
+    if new_state.owner is "none"
+      owned_status = "unclaimed"
+    else
+      owned_status = "claimed by the #{new_state.owner} team"
+
+    #And log the connection state.
+    @_log_event("A beacon was connected on the <strong>#{new_state.affiliation} side of the board</strong>; and is currently <strong>#{owned_status}<strong>.")
+
+
+  #
+  # Adds a given message to the event log.
+  #
+  _log_event: (message, time = null) =>
+
+    #Create a timestamp for the given message.
+    time ||= new Date()
+
+    #Create a new list-item with the given message.
+    new_event = $(document.createElement('li'))
+    new_event.append("<strong>#{@_create_log_time(time)}</strong>\t- #{message}")
+
+    #And add our new event to it.
+    @event_log.prepend(new_event)
+
+
+  #
+  # Creates a time in event-log format.
+  #
+  _create_log_time: (time = Date) ->
+
+    #Get a human-readable hourly date.
+    hours = (time.getHours() % 12) || 12
+    am_pm = if time.getHours() > 11 then "PM" else "AM"
+
+    #Format the given timestamp.
+    #http://codereview.stackexchange.com/questions/15097/coffeescript-date-formatting
+    timestamp = [hours, time.getMinutes(), time.getSeconds()].join(':')
+    timestamp = timestamp.replace( /\b(\d)\b/g, "0$1" )
+    timestamp = timestamp.replace /\s/g, ""
+
+    #Return the 12-hour time.
+    "#{timestamp} #{am_pm}"
+
+
+
+
 
   #
   # Returns the color of the active state's "opponent".
   #
   opponent_color: =>
-    switch @state.affiliation
+    switch @state?.affiliation
       when 'red'   then return 'green'
       when 'green' then return 'red'
       else return 'none'
 
-    
-    
 
   #
   # Returns true iff the user has enabled simulation.
