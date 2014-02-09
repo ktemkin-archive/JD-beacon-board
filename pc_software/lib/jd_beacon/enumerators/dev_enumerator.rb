@@ -5,8 +5,8 @@ module JDBeacon
   module Enumerators
 
     #
-    # Beacon board enumerator for systems which have a /dev/ filesystem,
-    # such as Linux or OS X.
+    # Beacon board enumerator for systems which have a compliant /dev/ filesystem,
+    # such as Linux and FreeBSD.
     #
     class DevEnumerator < Enumerator
      

@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
 
   #Binary Data Structure library, for parsing/generating serial communications.
   s.add_dependency 'bindata', '~>1.5.1'
+  s.add_dependency 'ruby-wmi', '~>0.4.0'
 
   # If you need to check in files that aren't .rb files, add them here
   s.files        = Dir["{lib}/**/*.rb", "bin/*", "LICENSE", "*.md"]
