@@ -1,0 +1,534 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\usepackage{color}
+\usepackage{titlesec}
+\usepackage[none]{hyphenat}
+
+
+\definecolor{cool-blue}{RGB}{0,143,197}
+
+\titleformat{\section}
+{\color{cool-blue}\large\bfseries}
+{\color{cool-blue}\thesection}{0.5em}{}
+
+\titleformat{\subsection}
+{\normalsize\bfseries}
+{\thesection}{0.5em}{}
+
+
+
+\usepackage{enumitem}
+\setlist[enumerate]{itemsep=-1mm}
+\setlist[itemize]{itemsep=-1mm}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman Linux Libertine
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts true
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format pdf5
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 0.5in
+\topmargin 0.5in
+\rightmargin 0.5in
+\bottommargin 0.5in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section*
+
+\size largest
+Programming and Testing Your Beacon Board
+\end_layout
+
+\begin_layout Standard
+This guide assumes you're using a Linux machine with the Atmel DFU programmer
+ installed---such as one of the machines in the LNG 709/711 lab.
+ If you're using a Ubuntu or Debian installation, you can install dfu-programmer
+ using the following command
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+sudo apt-get install dfu-programmer
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+A guide for programming your beacon board from Windows will very likely
+ be posted as the course progresses.
+\end_layout
+
+\begin_layout Section
+Place the Beacon Board into DFU Mode
+\end_layout
+
+\begin_layout Standard
+Before you can download any microcontroller code (
+\begin_inset Quotes eld
+\end_inset
+
+firmware
+\begin_inset Quotes erd
+\end_inset
+
+), you'll need to place your beacon board into 
+\emph on
+Device Firmware Update 
+\emph default
+(
+\begin_inset Quotes eld
+\end_inset
+
+DFU
+\begin_inset Quotes erd
+\end_inset
+
+) mode, which activates a small program already on the microcontroller.
+ This 
+\emph on
+bootloader
+\emph default
+ program can be used to program the onboard microcontroller via USB.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Entering DFU mode is simple:
+\end_layout
+
+\begin_layout Enumerate
+Connect your board to your computer via a MiniUSB cable---the same cable
+ used with your FPGA board.
+\end_layout
+
+\begin_layout Enumerate
+Using a small piece of wire, temporarily short the two exposed pads labeled
+ 
+\family typewriter
+JP1-RESET
+\family default
+, until the beacon board is no longer detected by your computer.
+ This should only take about a second.
+\end_layout
+
+\begin_layout Enumerate
+Remove the wire.
+ When the beacon board re-connects, it should be detected as an Atmel DFU
+ device.
+\end_layout
+
+\begin_layout Standard
+Once your device shows up as an Atmel DFU device, you're ready to program
+ it! 
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+Note that a device which contains no user program (such as a microcontroller
+ which is fresh from the factory) will always boot into the DFU mode; if
+ this is the first time you're programming the board, you may not notice
+ a visible change.
+\end_layout
+
+\begin_layout Section
+Erase the Microcontroller
+\end_layout
+
+\begin_layout Standard
+Now that the device is in DFU mode, we can issue commands to the 
+\emph on
+bootloader
+\emph default
+ using the dfu-porogrammer utility.
+ In general, the syntax for this tool is as follows:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+dfu-programmer <target-part> <command>
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Before you can load a program, you'll need to perform a full erase of the
+ microcontroller, which is accomplished via the 
+\family typewriter
+erase
+\family default
+ command.
+ It's important to note that a so-called 
+\emph on
+full erase
+\emph default
+ will remove any user firmware from the device, but won't remove the DFU
+ bootloader.
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+To perform a full erase, issue the following terminal command:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+dfu-programmer atmega32u4 erase
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align right
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hfill
+\end_layout
+
+\end_inset
+
+
+\emph on
+ (Continued on next page.)
+\emph default
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Download the Program
+\end_layout
+
+\begin_layout Standard
+Once the microcontroller has been erased, we can download a new program
+ to the microcontroller's flash memory using the 
+\family typewriter
+flash
+\family default
+\emph on
+ 
+\emph default
+command
+\emph on
+.
+ 
+\emph default
+The syntax for the flash command is as follows, where 
+\family typewriter
+<file>
+\family default
+ represents an 
+\emph on
+Intel hex file
+\emph default
+, which contains the data to be programmed in hex format.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+dfu-programmer <part> flash <file>
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family default
+Assuming you would like to program the 
+\emph on
+main.hex
+\emph default
+ file provided with the beacon board, the command would be as follows:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+dfu-programmer atmega32u4 flash main.hex
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Once that command is complete, you've successfully programmed your device!
+ You can read more about the Intel Hex file format at the following link:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.piclist.com/techref/fileext/hex/intel.htm
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\begin_inset Quotes eld
+\end_inset
+
+Boot
+\begin_inset Quotes erd
+\end_inset
+
+ into the New Firmware
+\end_layout
+
+\begin_layout Standard
+Once your device has been successfully programmed, you'll want to start
+ the newly-downloaded 
+\begin_inset Quotes eld
+\end_inset
+
+user program
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The process for booting into this program is straightforward, if inelegant:
+ simply unplug the device from USB, and plug it back in!
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+If you're just installed the Beacon Board firmware, you'll notice that the
+ device no longer identifies as an 
+\emph on
+Atmel DFU
+\emph default
+, but instead as one of the following:
+\end_layout
+
+\begin_layout Itemize
+On newer linux distributions, OS X, and Windows, the device will show up
+ as a 
+\emph on
+Binghamton University JD Beacon Board.
+\end_layout
+
+\begin_layout Itemize
+On some Linux distributions, the device will show up as 
+\family typewriter
+16d0:05a5 MCS
+\family default
+ under 
+\emph on
+lsusb
+\emph default
+; on others, it may show up as 
+\family typewriter
+16d0:05a5 GrauTec
+\family default
+.
+ 
+\end_layout
+
+\begin_layout Standard
+If you see any of these, your device is now fully functional! On the computers
+ in the LNG 709/711 labs, you can proceed to test your device by running
+ the following command, and following the on-screen instructions:
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+beacon-tester
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

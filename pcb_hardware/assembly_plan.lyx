@@ -189,8 +189,7 @@ Populate Y1, the 16MHz crystal oscillator.
 
 \begin_layout Standard
 After your microcontroller and interfacing logic have been assembled, carefully
- inspect your each of your components; ensure that there are no bridges
- or shorts.
+ inspect each of your components; ensure that there are no bridges or shorts.
  Several magnifying lenses are available in the student shop, which may
  help with your analysis.
 \end_layout
@@ -366,6 +365,18 @@ A good initial rule for debugging a board: verify your known voltages! In
  power supply of +5V, with respect to a GND pin.
  As you verify voltages, it may help to check off the nets printed on your
  schematics.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+You can also locate the VCC and GND pins on the 
+\emph on
+ISP test connector: 
+\emph default
+the bottom left and bottom right pins are GND and VCC, respectively.
 \end_layout
 
 \begin_layout Itemize
@@ -553,6 +564,10 @@ Populate R5, R6, R28, and R29; the base transistors for the IR hardware.
 \end_layout
 
 \begin_layout Enumerate
+Populate Q1, Q2, Q6, and Q7---the four transistors to the right of the board.
+\end_layout
+
+\begin_layout Enumerate
 Populate R7-R10, the current limiting resistors for the IR transmitters.
 \end_layout
 
@@ -572,6 +587,20 @@ Once you've finished the instructions above, your device is
 assembled
 \emph default
 --- and ready for testing and characterization during our third week.
+\end_layout
+
+\begin_layout Section*
+Cleaning
+\end_layout
+
+\begin_layout Standard
+After you've assembled your board, you'll want to clean off any flux remaining
+ on your board.
+ Our flux is water-soluble, so you can clean off your board using warm water
+ and a toothbrush; which are provided in the student shop.
+ Be sure to throughly dry your board before testing.
+ To accelerate drying, you can use the compressed air hose present next
+ to the sink in the student shop.
 \end_layout
 
 \end_body
