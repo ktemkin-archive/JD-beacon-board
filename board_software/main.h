@@ -81,6 +81,18 @@ bool beacon_is_disabled();
  */
 void set_up_hardware();
 
+
+/**
+ * Configures the AVR's unused I/O pins to inputs with pull-up
+ * resistors, to save power. This isn't an optimal configuration
+ * (it would be better to use external pull-ups, or set these up
+ *  as outputs), but it reduces the amount of soldering inherent
+ *  to the first method, and reduces the risk of a short inherent
+ *  to the second.
+ */ 
+void pull_up_unused_pins();
+
+
 /**
  * Starts the repeated transmission of a "claim code", a code which is
  * transmitted to the competing robots. If a robot is able to respond

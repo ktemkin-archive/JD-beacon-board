@@ -100,6 +100,7 @@ void set_up_hardware() {
   CPU_PRESCALE(CPU_16MHz);
 
   //Set up all of the peripherals...
+  pull_up_unused_pins();
   set_up_lights();
   set_up_ir_comm();
 
@@ -113,6 +114,39 @@ void set_up_hardware() {
 
   //And enable interrupts, starting the main device functions.
   sei();
+}
+
+/**
+ * Configures the AVR's unused I/O pins to inputs with pull-up
+ * resistors, to save power. This isn't an optimal configuration
+ * (it would be better to use external pull-ups, or set these up
+ *  as outputs), but it reduces the amount of soldering inherent
+ *  to the first method, and reduces the risk of a short inherent
+ *  to the second.
+ */ 
+void pull_up_unused_pins() {
+
+  //Specify which of the values correspond to unused ports;
+  //these will be configured as inputs with internal pull-ups.
+  const uint8_t port_f_unused = 0b11111111;
+  const uint8_t port_e_unused = 0b11111111;
+  const uint8_t port_d_unused = 0b10110011;
+  const uint8_t port_b_unused = 0b10001110;
+
+ 
+  //Apply the port values themselves.
+
+  DDRF  &= ~port_f_unused;
+  PORTF |=  port_f_unused;
+
+  DDRE  &= ~port_e_unused;
+  PORTE &=  port_e_unused;
+
+  DDRD  &= ~port_d_unused;
+  PORTD &=  port_d_unused;
+
+  DDRB  &= ~port_b_unused;
+  PORTB &=  port_b_unused;
 }
 
 
