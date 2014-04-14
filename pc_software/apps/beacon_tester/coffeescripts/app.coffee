@@ -26,6 +26,7 @@ class BeaconTestApplication
       red:    $('#affiliation_red')
       green:  $('#affiliation_green')
     @event_log = $('#event_log')
+    @ir_claim_panel = $('#claim_code')
 
     #TODO: DRY
     @simulation_controls =
@@ -173,6 +174,9 @@ class BeaconTestApplication
     @display_beacon_owner(status.owner)
     @display_beacon_affiliation(status.affiliation)
 
+    #Display the current IR information. 
+    @display_ir_claim_code(if status.owner == status.affiliation then null else status.claim_code)
+
 
 
   #
@@ -188,6 +192,18 @@ class BeaconTestApplication
   #
   display_beacon_affiliation: (affiliation) ->
     @_set_affiliation_selection(affiliation)
+
+
+  #
+  # Displays inforamtion about the beacon's current claim code.
+  #
+  display_ir_claim_code: (claim_code) ->
+    
+    if claim_code
+      @ir_claim_panel.html("The beacon is transmitting claim code <strong>#{claim_code}</strong>, and can be claimed by transmitting <strong>#{255 - claim_code}</strong>.")
+    else
+      @ir_claim_panel.html("The beacon current <strong>cannot be claimed</strong>.")
+
 
 
   #
@@ -364,9 +380,25 @@ class BeaconTestApplication
       @_log_state_on_connection(new_state)
       return
 
+    #If the beacon hasn't changed owners, check for any failed claim attempts.
+    if old_state.owner is new_state.owner
+
+      #If we've recieved an incorrect claim code, log the event.
+      if new_state.last_claim == -2
+        @_log_event("An invalid claim attempt was made; the response code was not properly framed.")
+      else if new_state.last_claim
+
+        #Compute the correct value for the claim code...
+        response_code = 255 - new_state.claim_code
+
+        #... and notify the user of the incident.
+        @_log_event("An invalid claim attempt was made. The response code was <strong>#{new_state.last_claim} " +
+          "<code>(0b#{new_state.last_claim.toString(2)})</code></strong>, but should have been <strong>#{response_code}" +
+          " <code>(0b#{response_code.toString(2)})</strong></code>.")
+
 
     #If the beacon has changed owners, report it!
-    unless old_state.owner is new_state.owner
+    else
      
       #If this beacon is being manually forced to "unclaimed", repor that.
       if new_state.owner is "none"
@@ -382,7 +414,6 @@ class BeaconTestApplication
   # Logs the state of the beacon on a connection.
   #
   _log_state_on_connection: (new_state) =>
-    console.log new_state
     return unless new_state.affiliation? and new_state.owner?
 
     #Create a message that describes the beacon's current claim status.

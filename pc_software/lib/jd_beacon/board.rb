@@ -44,6 +44,11 @@ module JDBeacon
     # A special, constant request that indicates that there is no new data.
     NULL_REQUEST = State.new(:id => 31)
 
+
+    #TODO: Abstract
+    REQUEST_CLAIM_CODE = 28
+    REQUEST_LAST_CLAIM = 29
+
     attr_reader :filename
 
     #
@@ -146,8 +151,55 @@ module JDBeacon
        
     end
 
+    #
+    # Returns the current claim code.
+    #
+    def claim_code
+      perform_request(REQUEST_CLAIM_CODE).unpack("C").first
+    end
+
+    #
+    # Returns the inverse of the current claim code. 
+    #
+    def inverted_claim_code
+      255 - claim_code
+    end
+
+    #
+    # Returns the most recent claim attempt, as a binary string.
+    #
+    def last_claim_attempt
+
+      #Request the most recent claim attempt's information.
+      raw_result = perform_request(REQUEST_LAST_CLAIM, 2)
+      result     = raw_result.unpack("s>").first
+
+      #If the last claim was -1, then we haven't received anything new.
+      return nil if result == -1;
+
+      #Otherwise, return the result directly.
+      return result
+
+    end
+
     
     private
+
+    #
+    # Performs a simple request according to code, and then 
+    #
+    def perform_request(request_code, response_length = 1, transmit = nil)
+
+      #Send the request identifier...
+      send_state(State.new(:id => request_code))
+
+      #... and any content, if some should exist.
+      @serial_port.write(transmit) if transmit
+
+      #... retrieve the response.
+      @serial_port.read(response_length) if response_length > 0
+
+    end
 
     #
     # Sets the target beacon's state,

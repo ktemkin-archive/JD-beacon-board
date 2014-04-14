@@ -3,7 +3,6 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   BeaconTestApplication = (function() {
-
     BeaconTestApplication.prototype.status_api = '/api/status';
 
     BeaconTestApplication.prototype.connected_board_api = '/api/connected_board';
@@ -14,45 +13,25 @@
 
     function BeaconTestApplication() {
       this.update_complete = __bind(this.update_complete, this);
-
       this.start_update = __bind(this.start_update, this);
-
       this._simulation_is_enabled = __bind(this._simulation_is_enabled, this);
-
       this.opponent_color = __bind(this.opponent_color, this);
-
       this._log_event = __bind(this._log_event, this);
-
       this._log_state_on_connection = __bind(this._log_state_on_connection, this);
-
       this._log_state_changes = __bind(this._log_state_changes, this);
-
       this._simulation_capture_should_be_applied = __bind(this._simulation_capture_should_be_applied, this);
-
       this.handle_simulation = __bind(this.handle_simulation, this);
-
       this._disable_simulation_controls = __bind(this._disable_simulation_controls, this);
-
       this._enable_simulation_controls = __bind(this._enable_simulation_controls, this);
-
       this._set_simulation_interval = __bind(this._set_simulation_interval, this);
-
       this.update_simulation_parameters = __bind(this.update_simulation_parameters, this);
-
       this.ensure_beacon_is_on = __bind(this.ensure_beacon_is_on, this);
-
       this.apply_beacon_status = __bind(this.apply_beacon_status, this);
-
       this.apply_board_status = __bind(this.apply_board_status, this);
-
       this.update_status = __bind(this.update_status, this);
-
       this.initialize_simulation = __bind(this.initialize_simulation, this);
-
       this.set_up_simulation_panel = __bind(this.set_up_simulation_panel, this);
-
       this.set_up_affiliation_panels = __bind(this.set_up_affiliation_panels, this);
-
       this.set_up_claim_panels = __bind(this.set_up_claim_panels, this);
       this.manual_control_panel = $('#manual_control');
       this.owner_graphic = $('#owner');
@@ -66,6 +45,7 @@
         green: $('#affiliation_green')
       };
       this.event_log = $('#event_log');
+      this.ir_claim_panel = $('#claim_code');
       this.simulation_controls = {
         simulation_enable: $("#simulate_capture"),
         simulation_interval: $("#simulation_interval"),
@@ -166,7 +146,8 @@
       this.state = status;
       this.manual_control_panel.removeClass('disabled');
       this.display_beacon_owner(status.owner);
-      return this.display_beacon_affiliation(status.affiliation);
+      this.display_beacon_affiliation(status.affiliation);
+      return this.display_ir_claim_code(status.owner === status.affiliation ? null : status.claim_code);
     };
 
     BeaconTestApplication.prototype.display_beacon_owner = function(owner) {
@@ -176,6 +157,14 @@
 
     BeaconTestApplication.prototype.display_beacon_affiliation = function(affiliation) {
       return this._set_affiliation_selection(affiliation);
+    };
+
+    BeaconTestApplication.prototype.display_ir_claim_code = function(claim_code) {
+      if (claim_code) {
+        return this.ir_claim_panel.html("The beacon is transmitting claim code <strong>" + claim_code + "</strong>, and can be claimed by transmitting <strong>" + (255 - claim_code) + "</strong>.");
+      } else {
+        return this.ir_claim_panel.html("The beacon current <strong>cannot be claimed</strong>.");
+      }
     };
 
     BeaconTestApplication.prototype._apply_disconnected_status = function() {
@@ -291,12 +280,19 @@
     };
 
     BeaconTestApplication.prototype._log_state_changes = function(old_state, new_state) {
-      var old_owner;
+      var old_owner, response_code;
       if (old_state === null && new_state !== null) {
         this._log_state_on_connection(new_state);
         return;
       }
-      if (old_state.owner !== new_state.owner) {
+      if (old_state.owner === new_state.owner) {
+        if (new_state.last_claim === -2) {
+          return this._log_event("An invalid claim attempt was made; the response code was not properly framed.");
+        } else if (new_state.last_claim) {
+          response_code = 255 - new_state.claim_code;
+          return this._log_event(("An invalid claim attempt was made. The response code was <strong>" + new_state.last_claim + " ") + ("<code>(0b" + (new_state.last_claim.toString(2)) + ")</code></strong>, but should have been <strong>" + response_code) + (" <code>(0b" + (response_code.toString(2)) + ")</strong></code>."));
+        }
+      } else {
         if (new_state.owner === "none") {
           return this._log_event("A beacon was taken from the <strong>" + old_state.owner + "</strong> team, and is now <strong>unclaimed</strong>.");
         } else {
@@ -308,7 +304,6 @@
 
     BeaconTestApplication.prototype._log_state_on_connection = function(new_state) {
       var owned_status;
-      console.log(new_state);
       if (!((new_state.affiliation != null) && (new_state.owner != null))) {
         return;
       }

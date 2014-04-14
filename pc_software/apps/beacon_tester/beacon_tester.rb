@@ -4,7 +4,9 @@
 require 'bundler/setup'
 Bundler.require
 
+require 'barista'
 require 'json'
+require 'sinatra'
 
 #Ensure that all helpers are loaded.
 require_rel 'helpers'
@@ -14,6 +16,11 @@ register Barista::Integration::Sinatra
 
 #Allow all local systems to connect to Sinatra.
 set :bind, '0.0.0.0'
+disable :logging
+
+#Silence the standard error.
+$stderr = File.open(File::NULL, 'w')
+
 
 #Configure the automatic inclusion of CoffeScripts.
 Barista.configure do |c|
@@ -40,7 +47,9 @@ end
 def adjust_board_state(&block)
   begin
     JDBeacon::Board.open(&block) if block
-    JDBeacon::Board.open { |board| JSON::generate(board.state.snapshot) }
+    JDBeacon::Board.open do |board| 
+      JSON::generate(board.state.snapshot.merge(:claim_code => board.claim_code, :last_claim => board.last_claim_attempt))
+    end
   rescue StandardError => e
     JSON::generate({:error => e.class, :message => e.to_s, :backtrace => e.backtrace})
   end
@@ -87,6 +96,12 @@ get '/api/status' do
   board_status
 end
 
+get '/api/claim_status' do
+  JDBeacon::Board.open do |board| 
+    JSON::generate(:last_attempt => board.last_claim_attempt, :code => board.claim_code, :inverted => board.inverted_claim_code)
+  end
+end
+
 #
 # Backend control methods.
 #
@@ -107,3 +122,15 @@ end
 get '/api/affiliate/:color' do
     adjust_board_state { |board| board.affiliation = params[:color].to_sym }
 end
+
+
+puts 
+puts "=========================="
+puts "Beacon Tester started!"
+puts "=========================="
+puts
+puts "To access the beacon test, point your web browser to:  http://localhost:#{settings.port}"
+puts "Press CTRL+C to stop running the beacon tester."
+puts 
+puts "Enjoy!"
+
