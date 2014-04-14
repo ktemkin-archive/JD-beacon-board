@@ -4,7 +4,7 @@ F_CPU=16000000UL
 
 #Specify the compiler chain and options we'll be using.
 CC=avr-gcc
-CFLAGS=-mmcu=atmega32u4 -Os -Wall -g -DF_CPU=$(F_CPU)
+CFLAGS=-mmcu=atmega32u4 -Os -Wall -g -DF_CPU=$(F_CPU) --std=c99
 LDFLAGS=-mmcu=atmega32u4
 OBJCOPY=avr-objcopy
 
@@ -22,7 +22,7 @@ define do_dfu =
 endef
 
 
-all: main.hex
+all: main.hex size
 
 #Program a teensy board with the Beacon software.
 teensy: main.hex
@@ -42,7 +42,7 @@ responder_dfu: responder.hex
 	$(OBJCOPY) -O ihex $^ $@
 
 #Dependency list for the main program.
-main.elf: timers.h timers.o lights.o lights.h ir_comm.o ir_comm.h state.h pc_comm.h pc_comm.c debug.h debug.c usb_serial/usb_serial.o usb_serial/usb_serial.h frequency.h main.h 
+main.elf: timers.h timers.o lights.o lights.h ir_comm.o ir_comm.h state.h pc_comm.h pc_comm.c usb_serial/usb_serial.o usb_serial/usb_serial.h frequency.h main.h 
 
 #Dependency lists for each of the test programs.
 responder.elf: timers.h timers.o lights.o lights.h ir_comm.o ir_comm.h frequency.h
@@ -55,6 +55,8 @@ pc_comm.o: usb_serial/usb_serial.o usb_serial/usb_serial.h
 %.elf: %.o
 	$(CC) $(LDFLAGS) $^ -o $@
 
+size: 
+	avr-size --mcu=atmega32u4 -C main.elf
 
 
 	

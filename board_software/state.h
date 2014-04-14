@@ -83,7 +83,7 @@ union board_state_union {
     // ID by its host, and a beacon value of 31 (all 1's) is prohibited, to ensure
     // that this value is always distinguishable from the sync byte. Any other 
     // value is a defined beacon ID.
-    unsigned id : 5; 
+    unsigned mode : 5; 
 
     // The affiliation of the beacon. 
     // This indicates which side of the board the beacon is on:
@@ -106,6 +106,18 @@ union board_state_union {
   uint8_t raw_data;
 
 };
+
+
+#define MODE_OFF         0
+#define MODE_NORMAL      1
+#define MODE_ERROR       31
+
+
+#define REQUEST_OFF           0
+#define REQUEST_NORMAL        1
+#define REQUEST_CLAIM_CODE    28
+#define REQUEST_LAST_CLAIM    29 
+#define REQUEST_UPDATE        31
 
 typedef union board_state_union BoardState;
 

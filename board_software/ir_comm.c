@@ -63,6 +63,13 @@ static volatile ReceiveHandler receive_handler = 0;
 
 
 /**
+ * Static "pseudo-global" that stores the function which should be called when
+ * a framing error occurs.
+ */ 
+static volatile ReceiveHandler frame_error_handler = 0;
+
+
+/**
  * Static "pseudo-global" that stores the function which should be called to
  * determine which value to transmit.
  */
@@ -306,6 +313,14 @@ void register_receive_handler(ReceiveHandler handler) {
 }
 
 /**
+ * Registers a given function to act as a "frame error handler",
+ * which will be called whenever a framing error has occurred.
+ */
+void register_frame_error_handler(ReceiveHandler handler) {
+  frame_error_handler = handler;
+}
+
+/**
  * Registers a given function to act as a "transmit provider",
  * which will be called whenever a new byte of data is about
  * to be transmitted. This function should return the data
@@ -344,9 +359,13 @@ ISR(USART1_RX_vect) {
   //Determine if a framing error has occurred.
   uint8_t framing_error = UCSR1A & FE1;
 
-  //If a receive handler was registered, call it.
+  //Handle data that has been received correctly...
   if(!framing_error && receive_handler) {
     receive_handler(received);
+  } 
+  //... and data for which a framing error has occurred.
+  else if(framing_error && frame_error_handler) {
+    frame_error_handler(received); 
   }
 
 }

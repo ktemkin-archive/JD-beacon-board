@@ -28,6 +28,27 @@
 #include "usb_serial/usb_serial.h"
 #include "pc_comm.h"
 
+
+/**
+ *
+ * Transmits the provided bytee to the PC.
+ *
+ * @param uint16_t The byte to be transmitted.
+ */
+void send_byte_to_pc(uint8_t byte) {
+  usb_serial_putchar(byte);
+}
+
+/**
+ * Transmits the provided word to the PC.
+ *
+ * @param uint16_t The word to be transmitted.
+ */
+void send_word_to_pc(uint16_t word) {
+  usb_serial_putchar(word >> 8);
+  usb_serial_putchar(word & 0xFF);
+}
+
 /**
 * Transmits the provided board state to the PC.
 *
@@ -36,7 +57,6 @@
 void send_state_to_pc(BoardState state) {
   usb_serial_putchar(state.raw_data);
 }
-
 
 /**
 * Receives a board state from the PC. If no board state is available,

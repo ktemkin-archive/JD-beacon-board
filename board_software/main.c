@@ -35,7 +35,6 @@
 #include "lights.h"
 #include "ir_comm.h"
 #include "pc_comm.h"
-#include "debug.h"
 
 #include "main.h"
 
@@ -44,13 +43,13 @@
  * in terms of percent duty cycle.
  */
 static const uint8_t Bright = 100;
-static const uint8_t Dim = 5;
+static const uint8_t Dim = 3;
 
 /**
  * Stores the current state for the board.
  * See state.h for more information.
  */
-volatile static BoardState beacon = {.id = 0, .owner = OwnerNone};
+volatile static BoardState beacon = {.mode = MODE_OFF, .owner = OwnerNone};
 
 /**
  * Stores a "claim code", which is the code that needs to be transmitted to
@@ -58,6 +57,13 @@ volatile static BoardState beacon = {.id = 0, .owner = OwnerNone};
  * beacon is assigned an ID.
  */
 volatile static uint8_t claim_code = 0;
+
+
+/**
+ * Stores the most recent attempt at a beacon claim which has not been
+ * reported back to the PC, or -1 if no such claim exists.
+ */ 
+volatile static uint16_t last_claim_attempt = -1;
 
 
 /**
@@ -71,6 +77,10 @@ int main() {
   //Start listening for data from the competing robots.
   //In this case, receipt of any signals will trigger the "handle IR receive" function.
   register_receive_handler(handle_IR_receive);
+
+  //Register a function which will be called on a framing error.
+  //This is used for diagnostic purposes.
+  register_frame_error_handler(handle_IR_frame_error);
 
   //Registers the function that will determine the value to transmit during any IR
   //exchange.
@@ -99,15 +109,14 @@ void set_up_hardware() {
   //Ensure we're running at 16MHz.
   CPU_PRESCALE(CPU_16MHz);
 
-  //Set up all of the peripherals...
+  //Ensure that the unused pins aren't left floating,
+  //which can cause them to switch inappropriately, drawing
+  //unncessary amounts of power.
   pull_up_unused_pins();
+
+  //Set up all of the peripherals...
   set_up_lights();
   set_up_ir_comm();
-
-  //Enable the backend debug inferface, which is useful
-  //for debugging student assemblies-- and designs!
-  enable_debug_backend();
-  printf("Debug connection established.\n");
 
   //Set up the PC connection
   connect_to_pc();
@@ -182,19 +191,56 @@ void handle_pc_comm() {
   //Receive the new board state.
   new_state = receive_state_from_pc();
 
-  //If we weren't sent a "request" state, update the
-  //internal state.
-  if(new_state.id != 31) {
-     apply_state(new_state);
+  //Perform an action based on the request given.
+  switch(new_state.mode) 
+  {
+
+    //If the PC is requesting the most recent claim,
+    //responsd with the most recent claim code; then
+    //invalidate any pending claims.
+    case REQUEST_LAST_CLAIM:
+      send_most_recent_claim_attempt();
+      break;
+
+    //If the PC is requesting the current claim code, send it.
+    case REQUEST_CLAIM_CODE:
+      send_byte_to_pc(claim_code);
+      break;
+
+    //If the beacon is requesting an update,
+    //transmit one.
+    case REQUEST_UPDATE:
+      send_state_to_pc(beacon);
+      break;
+
+    //If we weren't sent a request state, 
+    //update the internal state, and transmit 
+    //the state back to the PC as a primitive
+    //acknowledgement.
+    default:
+      apply_state(new_state);
+      send_state_to_pc(beacon);
+      break;
+  
   }
 
-  //Send the beacon's current state to the PC.
-  //(If this was a request, the PC will use this to update its display.
-  // If this was a change, it will use this to verify that the change
-  // went through correctly.)
-  send_state_to_pc(beacon);
 }
 
+/**
+ * Transmits the most recent claim attempt to the PC.
+ * This invalidates any existing claim attempt.
+ */
+void send_most_recent_claim_attempt() {
+
+  //Ensure the following block is run "atomically":
+  //that is, ensure that no interrupts occur during
+  //transmission of the claim attempt.
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+    send_word_to_pc(last_claim_attempt);
+    last_claim_attempt = no_new_claim_code;
+  }
+
+}
 
 /**
  * Applies the provided "beacon state" object to the
@@ -284,7 +330,7 @@ bool beacon_can_be_claimed() {
  * and thus not being used in this round.
  */
 bool beacon_is_disabled() {
-  return beacon.id == 0 || beacon.id == 31;
+  return beacon.mode == MODE_OFF || beacon.mode == MODE_ERROR;
 }
 
 
@@ -329,6 +375,9 @@ void handle_IR_receive(uint8_t value) {
     return;
   }
 
+  //Store the most recent claim attempt.
+  last_claim_attempt = value;
+
   //If we've recieved a valid response code,
   //change this becaon's owner to match the claiming robot.
   if(is_valid_response_code(value)) {
@@ -344,4 +393,12 @@ void handle_IR_receive(uint8_t value) {
   //Apply the beacon's state.
   apply_state(beacon);
 
+}
+
+/**
+ * Function which handles reciept of an improperly framed
+ * IR value. This is mostly used for diagnostic purposes.
+ */ 
+void handle_IR_frame_error(uint8_t value) {
+  last_claim_attempt = misframed_claim_code;
 }

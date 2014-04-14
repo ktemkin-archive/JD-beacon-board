@@ -30,11 +30,25 @@
 
 #include "state.h"
 
+/**
+ *
+ * Transmits the provided bytee to the PC.
+ *
+ * @param uint16_t The byte to be transmitted.
+ */
+void send_byte_to_pc(uint8_t byte);
+
+/**
+ * Transmits the provided word to the PC.
+ *
+ * @param uint16_t The word to be provided.
+ */
+void send_word_to_pc(uint16_t word);
 
 /** 
  * Generic invalid state constant.
  */ 
-static const BoardState invalid_state = { .id = -1 };
+static const BoardState invalid_state = { .mode = MODE_ERROR };
 
 /**
  * Transmits the provided board state to the PC.

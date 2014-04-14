@@ -104,6 +104,12 @@ void ir_stop_transmitting();
 void register_receive_handler(ReceiveHandler handler);
 
 /**
+ * Registers a given function to act as a "frame error handler",
+ * which will be called whenever a framing error has occurred.
+ */
+void register_frame_error_handler(ReceiveHandler handler);
+
+/**
  * Registers a given function to act as a "transmit provider",
  * which will be called whenever a new byte of data is about
  * to be transmitted. This function should return the data

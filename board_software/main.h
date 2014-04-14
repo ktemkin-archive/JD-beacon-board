@@ -28,6 +28,7 @@
 #define __MAIN_H__
 
 #include <avr/interrupt.h>
+#include <util/atomic.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -39,6 +40,21 @@
 #include "lights.h"
 #include "ir_comm.h"
 #include "pc_comm.h"
+
+
+/**
+ * Constant which is used to represent the lack of a new claim code.
+ * Used for the diagnostic status functions.
+ */ 
+static const uint16_t no_new_claim_code = -1;
+
+
+/**
+ * Constant which is used to represent receipt of an misframed claim code.
+ * Used for the diagnostic status functions.
+ */ 
+static const uint16_t misframed_claim_code = -2;
+
 
 /**
  * Connects the beacon board to the host PC.
@@ -92,6 +108,12 @@ void set_up_hardware();
  */ 
 void pull_up_unused_pins();
 
+/**
+ * Transmits the most recent claim attempt to the PC.
+ * This invalidates any existing claim attempt.
+ */
+void send_most_recent_claim_attempt();
+
 
 /**
  * Starts the repeated transmission of a "claim code", a code which is
@@ -115,5 +137,10 @@ void handle_IR_receive(uint8_t value);
  */ 
 uint8_t value_to_transmit();
 
+/**
+ * Function which handles reciept of an improperly framed
+ * IR value. This is mostly used for diagnostic purposes.
+ */ 
+void handle_IR_frame_error(uint8_t value);
 
 #endif
