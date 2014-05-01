@@ -44,7 +44,6 @@ module JDBeacon
     # A special, constant request that indicates that there is no new data.
     NULL_REQUEST = State.new(:id => 31)
 
-
     #TODO: Abstract
     REQUEST_CLAIM_CODE = 28
     REQUEST_LAST_CLAIM = 29

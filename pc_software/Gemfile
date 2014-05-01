@@ -15,6 +15,7 @@ group :development do
 
   #And rspec, for unit tests.
   gem 'rspec', '~>2.14.1'
+  gem 'guard-rspec', '~>4.2.8'
 
   #Shotgun, which allows us to restart the development when necessary.
   gem 'shotgun', '~>0.9'
