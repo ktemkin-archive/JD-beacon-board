@@ -11,14 +11,18 @@ module JDBeacon
     class DevEnumerator < Enumerator
      
       #
-      # Determine if we can use this enumerator.
-      # We'll check to see that we're not on Windows, and that /dev
-      # exists. This should almost always be sufficient.
+      # Determine if we can (and should) use this enumerator.
+      #
+      # If we're on Windows, or udev is supported, this enumerator
+      # isn't a good fit. Otherwise, if "/dev" exists, this should
+      # be acceptable.
       #
       def self.supported?
         return false if RUBY_PLATFORM.include?('mswin')
-        return false unless File.exists?('/dev')
+        return false if RubDev::Context.new
         return true
+      rescue
+        return false
       end
 
       #
