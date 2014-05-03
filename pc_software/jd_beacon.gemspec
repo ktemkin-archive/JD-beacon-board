@@ -21,7 +21,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'therubyracer',  '~>0.12.1'
 
   #Serial port library, for communicating with the beacon board.
-  s.add_dependency 'serialport', '~>1.1.0'
+  s.add_dependency 'serialport', '~>1.3.0'
+
+  #UDEV library, for automatic identification on linux systems.
+  s.add_dependency 'rubdev', '~>0.0.1.1'
+
 
   #Binary Data Structure library, for parsing/generating serial communications.
   s.add_dependency 'bindata', '~>1.5.1'
