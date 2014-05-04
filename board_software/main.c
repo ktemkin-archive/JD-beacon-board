@@ -144,7 +144,6 @@ void pull_up_unused_pins() {
 
  
   //Apply the port values themselves.
-
   DDRF  &= ~port_f_unused;
   PORTF |=  port_f_unused;
 
@@ -319,10 +318,21 @@ void start_transmitting_claim_code() {
 
 /**
  * Returns true iff this beacon can be claimed;
- * that is, if it isn't owned by the current team.
+ * that is, if it isn't owned by the current team
+ * (and the beacon isn't in a frozen mode.)
  */
 bool beacon_can_be_claimed() {
-  return (uint8_t)beacon.owner != (uint8_t)beacon.affiliation;
+
+  //Determine if the beacon is already claimed...
+  uint8_t beacon_already_owned = ((uint8_t)beacon.owner == (uint8_t)beacon.affiliation);
+
+  //.. and determine if the beacon is "frozen", and thus unable to be claimed.
+  uint8_t beacon_is_frozen = (beacon.mode == MODE_FROZEN);
+
+  //The beacon should be claimable if it's _not_ owned by the affiliated team,
+  //and isn't in the frozen state.
+  return !beacon_is_frozen && !beacon_already_owned;
+
 }
 
 /**

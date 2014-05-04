@@ -110,11 +110,13 @@ union board_state_union {
 //TODO: Potentially look into replacing these with static unsigneds?
 #define MODE_OFF         0
 #define MODE_NORMAL      1
+#define MODE_FROZEN      27
 #define MODE_ERROR       31
 
 
 #define REQUEST_OFF           0
 #define REQUEST_NORMAL        1
+#define REQUEST_FROZEN        27
 #define REQUEST_CLAIM_CODE    28
 #define REQUEST_LAST_CLAIM    29 
 #define REQUEST_BOOTLOADER    30

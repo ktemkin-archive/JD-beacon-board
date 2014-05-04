@@ -218,10 +218,11 @@ module JDBeacon
         end
       end
 
+      #Freeze all beacon activity, once the round is over!
+      each_beacon { |beacon| beacon.mode = :freeze }
+
       log("Competition round ended!")
       log("Final scores: #{scores}.")
-
-      #freeze all beacon activity
 
     end
 
