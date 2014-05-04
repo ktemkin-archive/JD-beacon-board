@@ -107,7 +107,7 @@ union board_state_union {
 
 };
 
-
+//TODO: Potentially look into replacing these with static unsigneds?
 #define MODE_OFF         0
 #define MODE_NORMAL      1
 #define MODE_ERROR       31
@@ -117,6 +117,7 @@ union board_state_union {
 #define REQUEST_NORMAL        1
 #define REQUEST_CLAIM_CODE    28
 #define REQUEST_LAST_CLAIM    29 
+#define REQUEST_BOOTLOADER    30
 #define REQUEST_UPDATE        31
 
 typedef union board_state_union BoardState;

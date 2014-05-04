@@ -15,7 +15,6 @@
 # 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -36,14 +35,17 @@ module JDBeacon
   #
   class Competition
 
-    attr_reader :board_pairs
+    #This is for debug only!
+    #attr_reader :board_pairs
+ 
 
     #
     # Creates a new instance of the JD Beacon competition.
     # 
     def initialize
-      @message_targets = [] 
+      @message_targets = [ lambda { |s| puts s }] #Debug only! replace with []
       create_paired_connections
+      reset
     end
 
     #
@@ -123,60 +125,169 @@ module JDBeacon
     # Resets the competition field to its original state.
     # 
     def reset
-      each_beacon       { |beacon| beacon.id = 0; beacon.owner = :none }
+
+      #Initialize each beacon...
+      each_beacon       { |beacon| beacon.mode = :off; beacon.owner = :none }
       each_red_beacon   { |beacon| beacon.affiliation = :red}
       each_green_beacon { |beacon| beacon.affiliation = :green}
+
+      #Clear our "first to claim" register...
+      @first_to_claim   = nil
+
+      #... and record the initial state of each beacon.
+      @last_states = @board_pairs.map { |pair| states_for_pair(pair)}
+
+    end
+
+    #
+    # Performa a given 
+    #
+    def each_beacon_in_pair(pair_number, &action)
+      Thread.exclusive do
+        @board_pairs[pair_number].each(&action)
+      end
     end
 
 
     #
-    # Makes a given beacon's selection.
+    # Makes the allegiance of each beacon in a pair visible by displaying
+    # its color, dimly.
     # 
-    def make_visible(pair_number)
-
-      #Set both of the devices in the pair to display their own color.
-      pair = @board_pairs[pair_number]
-      pair.each do |color, device|
+    def display_allegiance(pair_number)
+      each_beacon_in_pair(pair_number) do |color, device|
         device.owner = color
-        device.id = 1
+        device.mode = :on
       end
-
     end
+
+    #
+    # Turns off both beacons in a given pair.
+    #
+    def turn_off_pair(pair_number)
+      each_beacon_in_pair(pair_number) do |color, device|
+        device.mode = :off
+      end
+    end
+
+    #
+    # Turns off all beacons' lights.
+    #
+    def turn_off_all
+      Thread.exclusive do
+        beacons.each {|device| device.mode = :off}
+      end
+    end
+
 
     #
     # Run the given competition instance on the current thread.
     # This will lock the current thread.
     #
-    def run!
+    # @param duration Duration in seconds.
+    #
+    def run!(duration = nil)
+
+      log("About to start a competition round...")
 
       reset
-      each_beacon { |beacon| beacon.id = 1 }
+      each_beacon { |beacon| beacon.mode = :on }
       log("New competition round started. All ownership reset.")
 
-      #record initial states
-      last_states = @board_pairs.map { |pair| states_for_pair(pair)}
-     
-      #Main game loop.
-      loop do
 
-        #Monitor each pair, as quickly as possible.
-        each_pair_with_index do |pair, pair_number|
-         
-          #Determine the current state of the given pair...
-          new_state  = states_for_pair(pair)
-          last_state = last_states[pair_number]
+      #And determine the finish time, if a duration is provided.
+      @finish_time = duration ? (Time.now + duration) : nil
 
-          #Update the boards according to any changes that have occurred;
-          #and update the most recent state accordingly.
-          new_state = update_states_for_pair(pair, new_state, last_state)
-          last_states[pair_number] = new_state
+      #Main game loop, which should run until the duration is passed.
+      until time_up?
 
+        #Ensure that this thread is run exlcusively; and not interrupted.
+        Thread.exclusive do
+
+          #Monitor each pair, as quickly as possible.
+          each_pair_with_index do |pair, pair_number|
+           
+            #Determine the current state of the given pair...
+            new_state  = states_for_pair(pair)
+            last_state = @last_states[pair_number]
+
+            #Update the boards according to any changes that have occurred;
+            #and update the most recent state accordingly.
+            @last_states[pair_number] = update_states_for_pair(pair, new_state, last_state)
+
+          end  
         end
-
       end
-     
+
+      log("Competition round ended!")
+      log("Final scores: #{scores}.")
+
       #freeze all beacon activity
 
+    end
+
+    #
+    # Returns the number of seconds remaining, which may be negative,
+    # or nil if the round has no limit.
+    #
+    def seconds_left
+      return nil unless @finish_time
+      @finish_time - Time.now
+    end
+
+    #
+    # Returns true iff the round's time is up.
+    #
+    def time_up?
+      return false unless @finish_time
+      seconds_left < 0
+    end
+
+    #
+    # Returns the owners for each of the beacon pairs, 
+    # as of the last time an update was performed.
+    #
+    # @param update boolean If true, the beacons' current states will
+    #   be updated; otherwise the most recent value will be used. This
+    #   should not be true while a competition is running!
+    #
+    def beacon_owners(update=false)
+
+      #If requested, update each of the beacon pairs' states.
+      states = 
+        if update
+          @board_pairs.map { |pair| states_for_pair(pair) }
+        else
+          @last_states
+        end
+
+      #Convert each set of states into a owner.
+      states.map { |state| state[:red].owner }
+
+    end
+
+    
+    #
+    # Return the current scores for both of the competing teams.
+    #
+    def scores
+      #Thread.exclusive do
+
+        #Start off assuming a zero score for both teams.
+        scores = { :red => 0, :green => 0 }
+
+        #Award each team 30 points for any beacons they own.
+        beacon_owners.each do |owner|
+          next unless scores[owner]
+          scores[owner] += 30
+        end
+
+        #Awared the first team to claim a beacon 8 points.
+        scores[@first_to_claim] += 8 if @first_to_claim
+
+        #And return the computed scores.
+        scores
+      #end
+      
     end
 
 
@@ -197,7 +308,20 @@ module JDBeacon
       {:red => pair[:red].state, :green => pair[:green].state }
     end
 
+    #
+    # 
+    #
+    def first_to_claim
+      @first_to_claim
+    end
 
+
+    #
+    # Updates the states for a pair of beacons, given a pair of "simultaneous" readings.
+    #
+    # Warning: This method updates beacon states, and thus should only be called in "exclusive"
+    # critical sections, to ensure thread safety.
+    #
     def update_states_for_pair(pair, new_state, last_state)
 
       #Identify whether either side has claimed a beacon...
@@ -229,6 +353,9 @@ module JDBeacon
         #... update the beacons themselves...
         pair[:red].owner = pair[:green].owner = new_owner 
 
+        #... update the "first to claim" statistic, if appropriate...
+        @first_to_claim ||= new_owner
+
         #... modify the new state object...
         new_state[:red].owner = new_state[:green].owner = new_owner
 
@@ -240,8 +367,6 @@ module JDBeacon
       new_state
      
     end
-
-
 
 
     #
@@ -256,18 +381,21 @@ module JDBeacon
     # Creates a set of paired connections for each of the beacon board connections.
     #
     def create_paired_connections(beacons=initiate_beacon_connections)
-        
-      connections = initiate_beacon_connections
+      #Ensure that this aciton is performed atomically.
+      Thread.exclusive do
+          
+        connections = initiate_beacon_connections
 
-      #Clear out the list of paired connections.
-      @board_pairs = []
+        #Clear out the list of paired connections.
+        @board_pairs = []
 
-      #Split each of the boards into a set of paired elements.
-      connections.each_slice(2) do |red, green|
-        next unless green
-        board_pairs << { :red => red, :green => green} 
+        #Split each of the boards into a set of paired elements.
+        connections.each_slice(2) do |red, green|
+          next unless green
+          @board_pairs << { :red => red, :green => green} 
+        end
+
       end
-
     end
 
 
@@ -278,12 +406,12 @@ module JDBeacon
     #   all connected beacons.
     #
     def initiate_beacon_connections(enumerator=Enumerator)
-     
-      #Get a list of all connected board devices...
-      board_connections = enumerator.connected_beacon_boards
+       
+        #Get a list of all connected board devices...
+        board_connections = enumerator.connected_beacon_boards
 
-      #... and convert that into a list of actual beacon boards.
-      return board_connections.map { |connection| Board.new(connection) }
+        #... and convert that into a list of actual beacon boards.
+        return board_connections.map { |connection| Board.new(connection) }
 
     end
 

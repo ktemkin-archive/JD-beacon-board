@@ -256,7 +256,7 @@ class BeaconTestApplication
   # TODO: Replace me with a more comprehensive mode system!
   #
   ensure_beacon_is_on: =>
-    @perform_api_call('mode', 'on') unless @state?.id > 0
+    @perform_api_call('mode', 'on') unless @state?.mode > 0
 
 
   #

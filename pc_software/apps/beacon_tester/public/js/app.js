@@ -78,26 +78,34 @@
     };
 
     BeaconTestApplication.prototype.set_up_claim_panels = function() {
-      var _this = this;
-      this.claim_panels.red.click(function() {
-        return _this.claim_beacon('red');
-      });
-      this.claim_panels.none.click(function() {
-        return _this.claim_beacon('none');
-      });
-      return this.claim_panels.green.click(function() {
-        return _this.claim_beacon('green');
-      });
+      this.claim_panels.red.click((function(_this) {
+        return function() {
+          return _this.claim_beacon('red');
+        };
+      })(this));
+      this.claim_panels.none.click((function(_this) {
+        return function() {
+          return _this.claim_beacon('none');
+        };
+      })(this));
+      return this.claim_panels.green.click((function(_this) {
+        return function() {
+          return _this.claim_beacon('green');
+        };
+      })(this));
     };
 
     BeaconTestApplication.prototype.set_up_affiliation_panels = function() {
-      var _this = this;
-      this.affiliation_panels.green.click(function() {
-        return _this.set_affiliation('green');
-      });
-      return this.affiliation_panels.red.click(function() {
-        return _this.set_affiliation('red');
-      });
+      this.affiliation_panels.green.click((function(_this) {
+        return function() {
+          return _this.set_affiliation('green');
+        };
+      })(this));
+      return this.affiliation_panels.red.click((function(_this) {
+        return function() {
+          return _this.set_affiliation('red');
+        };
+      })(this));
     };
 
     BeaconTestApplication.prototype.set_up_simulation_panel = function() {
@@ -209,7 +217,7 @@
 
     BeaconTestApplication.prototype.ensure_beacon_is_on = function() {
       var _ref;
-      if (!(((_ref = this.state) != null ? _ref.id : void 0) > 0)) {
+      if (!(((_ref = this.state) != null ? _ref.mode : void 0) > 0)) {
         return this.perform_api_call('mode', 'on');
       }
     };

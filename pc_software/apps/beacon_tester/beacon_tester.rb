@@ -107,9 +107,8 @@ end
 #
 
 get '/api/mode/:mode' do
-  #TODO: Replace me when ID is change to "mode".
   mode = params[:mode] == 'on' ? 1 : 0
-  adjust_board_state { |board| board.id = mode }
+  adjust_board_state { |board| board.mode = mode }
 end
 
 

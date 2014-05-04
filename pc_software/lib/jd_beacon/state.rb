@@ -10,11 +10,23 @@ module JDBeacon
   class State < BinData::Record
 
     # A look-up table that maps each of the possible beacon colors to 
-    # their raw binary.
+    # their raw binary value.
     TEAMS = {
       :green => 0,
       :red   => 1,
       :none  => 2
+    }
+
+    #
+    # A look-up table that maps each of the possible beacom _modes_
+    # to their raw binary data.
+    #
+    MODES = {
+      :off     => 0,
+      :normal  => 1,
+      :on      => 1,
+      :frozen  => 27,
+      :error   => 31,
     }
 
     # Stores a list of any fields which are "color fields".
@@ -37,18 +49,27 @@ module JDBeacon
       #And identify this as a "color field" internally.
       @color_fields << name
 
+      #And create getter/setters for the team colors.
+      define_symbol_accessors(name, TEAMS)
+
+    end
+
+    #
+    # Meta-method which creates getters and setter methods which
+    # allow substitution of symbols for hard constants.
+    #
+    def self.define_symbol_accessors(name, collection)
       #Create a getter method, which automatically replaces the raw representation
       #of a color with a more descriptive symbol...
       define_method(name) do
-        TEAMS.key(self[name])
+        collection.key(self[name])
       end
 
       #... and create setter methods which automatically replace each color with the
       #correesponding raw binary representation.
       define_method("#{name}=") do |value| 
-        self[name] = TEAMS[value]
+        self[name] = collection[value]
       end
-
     end
 
 
@@ -74,7 +95,8 @@ module JDBeacon
     # ID by its host, and a beacon value of 31 (all 1's) is prohibited, to ensure
     # that this value is always distinguishable from the sync byte. Any other 
     # value is a defined beacon ID.
-    bit5 :id
+    bit5 :mode
+    define_symbol_accessors :mode, MODES
 
 
     #
@@ -89,11 +111,18 @@ module JDBeacon
       #Replace any of the "color fields" with their appropriate symbol name.
       snapshot.each do |key, value| 
 
-        #If this isn't a color field, there's no need to modify it.
-        next unless self.class.color_fields.include?(key.to_sym)
+        #If this is a color field, modify it.
+        #TODO: DRY up?
+        if self.class.color_fields.include?(key.to_sym)
 
-        #Replace the given field value with the appropriate color.
-        snapshot[key] = TEAMS.key(value)
+          #Replace the given field value with the appropriate color.
+          snapshot[key] = TEAMS.key(value)
+
+        elsif key.to_sym == :mode
+
+          snapshot[key] = MODES.key(value)
+        end
+
 
       end
 

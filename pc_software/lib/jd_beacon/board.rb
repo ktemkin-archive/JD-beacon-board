@@ -42,7 +42,7 @@ module JDBeacon
     READ_TIMEOUT = 2000
 
     # A special, constant request that indicates that there is no new data.
-    NULL_REQUEST = State.new(:id => 31)
+    NULL_REQUEST = State.new(:mode => 31)
 
     #TODO: Abstract
     REQUEST_CLAIM_CODE = 28
@@ -79,7 +79,7 @@ module JDBeacon
     end
 
     #Create a state setter for each of the beacon board's properties.
-    STATE_PROPERTIES = [:id, :affiliation, :owner]
+    STATE_PROPERTIES = [:mode, :affiliation, :owner]
     state_setter(*STATE_PROPERTIES)
 
     #And forward any state call to the state object itself>
@@ -189,8 +189,10 @@ module JDBeacon
     #
     def perform_request(request_code, response_length = 1, transmit = nil)
 
+      #TODO: Look up the request, if the request_code is a symbol.
+
       #Send the request identifier...
-      send_state(State.new(:id => request_code))
+      send_state(State.new(:mode => request_code))
 
       #... and any content, if some should exist.
       @serial_port.write(transmit) if transmit
