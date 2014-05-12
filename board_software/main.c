@@ -300,9 +300,11 @@ void enforce_state() {
   if(beacon_can_be_claimed()) {
     set_light_brightness(Bright);
     start_transmitting_claim_code();
+    ir_enable_receive();
   } else {
     set_light_brightness(Dim);
     ir_stop_transmitting();
+    ir_disable_receive();
   }
 }
 

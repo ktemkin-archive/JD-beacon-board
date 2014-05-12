@@ -88,7 +88,7 @@ static uint8_t ir_receive_enabled = 0;
  * for use in IR communications. This is externally AND'd with
  * our UART signal to produce our final IR communication.
  */
-static void set_up_pwm_timer();
+static void set_up_modulation();
 
 
 /**
@@ -113,7 +113,7 @@ static void ir_perform_continuous_transmission();
 void set_up_ir_comm() {
 
   //Set up the internal PWM timer to create our carrier wave.
-  set_up_pwm_timer();
+  set_up_modulation();
 
   //Set up the UART.
   set_up_uart();
@@ -121,10 +121,10 @@ void set_up_ir_comm() {
 }
 
 /**
- * Sets up Timer 3 to produce a 38kHz PWM waveform,
+ * Sets up Timer 3 to produce a 38kHz modulation waveform,
  * for use in IR communications.
  */
-void set_up_pwm_timer() {
+void set_up_modulation() {
 
   // Set the OC4D pin (PD7) into output mode.
   DDRC |= (1 << PC6);
@@ -162,6 +162,24 @@ void set_up_pwm_timer() {
   TCCR3A |= (1 << COM3A0);
 
 }
+
+/**
+ * Disables the IR carrier wave, disabling IR transmission.
+ */
+void disable_modulation() {
+  //Disable the timer's clock, disabling modulation. 
+  TCCR3B &= ~(1 << CS11 | 1 << CS10);
+}
+
+
+/**
+ * Enables the IR carrier wave, enabling IR transmission.
+ */
+void enable_modulation() {
+  //Set the timer's clock to CLK_IO/8, enabling modulation.
+  TCCR3B |= (0 << CS11 | 1 << CS10);
+}
+
 
 
 /**
@@ -274,6 +292,9 @@ static void ir_perform_continuous_transmission() {
  */ 
 void ir_transmit(uint8_t value) {
 
+  //Ensure modulation is on, so we can transmit via our IR carrier.
+  enable_modulation();
+
   //Ensure that we don't try to receive during transmit.
   ir_disable_receive_until_transmit_complete();
 
@@ -336,7 +357,7 @@ void register_transmit_provider(TransmitProvider provider) {
  * for to transmit a new piece of data while in continuous transmission mode.
  */
 ISR(USART1_UDRE_vect) {
-
+#
   //If receipt should be enabled, but we've disabled reciept
   //during transmission, re-enable receipt.
   if(ir_receive_enabled) {
@@ -369,3 +390,5 @@ ISR(USART1_RX_vect) {
   }
 
 }
+
+

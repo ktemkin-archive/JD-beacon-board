@@ -4,7 +4,7 @@ F_CPU=16000000UL
 
 #Specify the compiler chain and options we'll be using.
 CC=avr-gcc
-CFLAGS=-mmcu=atmega32u4 -Os -Wall -g -DF_CPU=$(F_CPU) --std=c99
+CFLAGS=-mmcu=atmega32u4 -Os -Wall -g -DF_CPU=$(F_CPU) --std=c99 #-DSILENT_OPERATION
 LDFLAGS=-mmcu=atmega32u4
 OBJCOPY=avr-objcopy
 

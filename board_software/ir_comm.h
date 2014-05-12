@@ -117,4 +117,15 @@ void register_frame_error_handler(ReceiveHandler handler);
  */
 void register_transmit_provider(TransmitProvider provider);
 
+
+/**
+ * Disables the IR carrier wave, disabling IR transmission.
+ */
+void disable_modulation();
+
+/**
+ * Enables the IR carrier wave, enable IR transmission.
+ */
+void enable_modulation();
+
 #endif

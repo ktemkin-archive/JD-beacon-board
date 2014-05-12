@@ -187,8 +187,6 @@ module JDBeacon
     #
     def run!(duration = nil)
 
-      log("About to start a competition round...")
-
       reset
       each_beacon { |beacon| beacon.mode = :on }
       log("New competition round started. All ownership reset.")
