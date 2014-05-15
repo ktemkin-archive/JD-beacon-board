@@ -167,6 +167,8 @@ void handle_IR_receive(uint8_t value) {
       toggle_lights();
   #endif
 
+  _delay_ms(100);
+
   //Transmit the claim code...
   ir_transmit(~value);
 

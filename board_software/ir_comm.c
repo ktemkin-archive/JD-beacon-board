@@ -29,10 +29,6 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-
-//DEBUG ONLY
-#include <util/delay.h>
-
 #include "ir_comm.h"
 
 /**
@@ -204,7 +200,9 @@ void set_up_uart() {
   UBRR1 = (F_CPU / (16UL * uart_baud_rate)) - 1;
 
   //Enable the "transmission complete" interrupt.
-  UCSR1B |= (1 << UDRE1);
+  UCSR1A |= (1 << TXC1);
+  UCSR1B |= (1 << TXCIE1);
+
 
 }
 
@@ -221,7 +219,6 @@ void ir_enable_receive() {
 
   //And enable IR receipt itself.
   UCSR1B |= (1 << RXEN1);
-
 }
 
 
@@ -236,7 +233,7 @@ void ir_disable_receive() {
   ir_receive_enabled = 0;
 
   //And disable receipt itself.
-  UCSR1B &= ~(1 << RXEN1);
+  ir_disable_receive_until_transmit_complete();
 
 }
 
@@ -356,8 +353,9 @@ void register_transmit_provider(TransmitProvider provider) {
  * Interrupt handler which is executed whenever the UART is ready
  * for to transmit a new piece of data while in continuous transmission mode.
  */
-ISR(USART1_UDRE_vect) {
-#
+ISR(USART1_TX_vect) {
+//ISR(USART1_UDRE_vect) {
+
   //If receipt should be enabled, but we've disabled reciept
   //during transmission, re-enable receipt.
   if(ir_receive_enabled) {
@@ -390,5 +388,3 @@ ISR(USART1_RX_vect) {
   }
 
 }
-
-

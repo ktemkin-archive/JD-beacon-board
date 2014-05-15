@@ -65,6 +65,13 @@ volatile static uint8_t claim_code = 0;
  */ 
 volatile static uint16_t last_claim_attempt = -1;
 
+/**
+ * Constant which specifies the maximum allowed amount of bit errors
+ * before the beacon can be claimed. If this is set to 8, the beacon
+ * will always be claimed when IR is received.
+ */
+static const uint8_t maximum_allowed_errors = 0;
+
 
 /**
  * Main beacon control routines.
@@ -347,6 +354,29 @@ bool beacon_is_disabled() {
 
 
 /**
+ * Returns the hamming distance (number of bit errors)
+ * between two given bytes.
+ */
+uint8_t hamming_distance(uint8_t a, uint8_t b) {
+
+  unsigned char distance = 0;
+
+  //For each of the bits in an eight-bit number...
+  for(uint16_t i = 1; i < 0x100; i = i << 1) {
+
+      //If the given bit is different for both A and B,
+      //increase the hamming distance.
+      if((a & i) != (b & i)) {
+        ++distance; 
+      }
+  }
+
+  //... return the computed hamming distance.
+  return distance;
+}
+
+
+/**
  * Returns true iff the provided "response code"
  * matches the transmitted "claim code". If this is
  *
@@ -357,9 +387,10 @@ bool is_valid_response_code(uint8_t code) {
   //will promote claim_code to an integer _before_ its bitwise
   //not operation. We need it to be a uint8_t afterwards, so
   //the comparison is performed correctly!
-  return code == (uint8_t)~claim_code;
+  return hamming_distance(code, (uint8_t)~claim_code) <= maximum_allowed_errors;
 
 }
+
 
 /**
  * Functions which determines the value that should be transmitted
@@ -374,6 +405,7 @@ uint8_t value_to_transmit() {
   return claim_code;
 
 }
+
 
 /**
  * Function which handles the receipt of an IR value from
