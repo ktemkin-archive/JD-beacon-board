@@ -107,7 +107,7 @@ end
 #
 
 get '/api/mode/:mode' do
-  mode = params[:mode] == 'on' ? 1 : 0
+  mode = params[:mode].to_sym
   adjust_board_state { |board| board.mode = mode }
 end
 

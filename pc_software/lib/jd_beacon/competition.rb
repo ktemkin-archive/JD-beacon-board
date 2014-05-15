@@ -153,11 +153,15 @@ module JDBeacon
     # Makes the allegiance of each beacon in a pair visible by displaying
     # its color, dimly.
     # 
-    def display_allegiance(pair_number)
+    def display_affiliation(pair_number, turn_off_others)
+      
+      turn_off_all
+
       each_beacon_in_pair(pair_number) do |color, device|
         device.owner = color
         device.mode = :on
       end
+
     end
 
     #
@@ -287,6 +291,14 @@ module JDBeacon
         scores
       #end
       
+    end
+
+    #
+    # Swaps a given pair of beacons.
+    #
+    def swap(color_a, number_a, color_b, number_b)
+      @board_pairs[number_a][color_a], @board_pairs[number_b][color_b] = 
+          @board_pairs[number_b][color_b], @board_pairs[number_a][color_a]
     end
 
 

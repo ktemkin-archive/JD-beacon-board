@@ -102,7 +102,7 @@ module JDBeacon
       #
       # Allow access to the safe calls during the competition.
       #
-      def_delegators :@competition, :seconds_left, :beacon_owners, :scores, :first_to_claim
+      def_delegators :@competition, :seconds_left, :beacon_owners, :scores, :first_to_claim, :beacons_per_side
 
 
       #Allow use of "owners" to get the beacon's owners.
