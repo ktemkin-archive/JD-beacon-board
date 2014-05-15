@@ -189,7 +189,7 @@ module JDBeacon
     #
     # @param duration Duration in seconds.
     #
-    def run!(duration = nil)
+    def run!(duration = 180)
 
       reset
       each_beacon { |beacon| beacon.mode = :on }
@@ -204,6 +204,8 @@ module JDBeacon
 
         #Ensure that this thread is run exlcusively; and not interrupted.
         Thread.exclusive do
+
+          #TODO: Keep track of score.
 
           #Monitor each pair, as quickly as possible.
           each_pair_with_index do |pair, pair_number|
