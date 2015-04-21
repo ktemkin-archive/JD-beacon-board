@@ -100,11 +100,13 @@ module JDBeacon
       # attached beacon board Abstract Control Model USB-to-serial devices.
       #
       def connected_beacon_board_udev_devices
-        find_matching_udev_devices do |enumerator|
+        devices = find_matching_udev_devices do |enumerator|
           enumerator.match_subsystem("tty")
           enumerator.match_property("ID_VENDOR_ID", VENDOR_ID)
           enumerator.match_property("ID_MODEL_ID", PRODUCT_ID)
         end
+
+        devices.sort { |a,b| a.property("ID_SERIAL") <=> b.property("ID_SERIAL") }
       end
 
       
