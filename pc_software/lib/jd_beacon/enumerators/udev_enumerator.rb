@@ -100,11 +100,17 @@ module JDBeacon
       # attached beacon board Abstract Control Model USB-to-serial devices.
       #
       def connected_beacon_board_udev_devices
-        find_matching_udev_devices do |enumerator|
+        devices = find_matching_udev_devices do |enumerator|
           enumerator.match_subsystem("tty")
           enumerator.match_property("ID_VENDOR_ID", VENDOR_ID)
           enumerator.match_property("ID_MODEL_ID", PRODUCT_ID)
         end
+
+        # Devices returned by dev_enumerator are sorted by serial number, and
+        # loading beacons with unique serials is a convenient way to ensure
+        # they are loaded in the correct order. To replicate the behavior of
+        # dev_enumartor, sort them by serial number here too.
+        devices.sort_by { |d| d.property("ID_SERIAL") }
       end
 
       
