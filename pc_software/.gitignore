@@ -1,4 +1,4 @@
 vendor
 bin
-*/Gemfile.lock
+Gemfile.lock
 .bundle
