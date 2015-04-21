@@ -106,7 +106,11 @@ module JDBeacon
           enumerator.match_property("ID_MODEL_ID", PRODUCT_ID)
         end
 
-        devices.sort { |a,b| a.property("ID_SERIAL") <=> b.property("ID_SERIAL") }
+        # Devices returned by dev_enumerator are sorted by serial number, and
+        # loading beacons with unique serials is a convenient way to ensure
+        # they are loaded in the correct order. To replicate the behavior of
+        # dev_enumartor, sort them by serial number here too.
+        devices.sort_by { |d| d.property("ID_SERIAL") }
       end
 
       
